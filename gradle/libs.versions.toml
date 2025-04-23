@@ -2,6 +2,7 @@
 agp = "8.9.2"
 appcompat = "1.7.0"
 authAndroid = "1.0.0"
+composeFoundation = "1.4.1"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -11,13 +12,16 @@ lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 postgrestAndroid = "1.0.0"
+recyclerview = "1.4.0"
 storageAndroid = "1.0.0"
 supabaseAndroid = "1.0.0"
 playServicesLocation = "21.3.0"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-compose-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "composeFoundation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 auth-android = { module = "io.github.jan-tennert.supabase-kt:auth-android", version.ref = "authAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

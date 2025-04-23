@@ -31,7 +31,6 @@
         <activity
             android:name=".CreateEventActivity"
             android:exported="false" />
-        <!-- Other activities -->
     </application>
 
 </manifest>

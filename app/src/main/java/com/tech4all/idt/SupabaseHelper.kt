@@ -45,6 +45,7 @@ data class Event(
     @SerialName("type") val type: String
 )
 
+
 object SupabaseHelper {
     // Assume you have your Supabase URL and API key defined as constants or retrieved from configuration
     private const val SUPABASE_URL = "https://vrykwubmpmlwobfjcurg.supabase.co"

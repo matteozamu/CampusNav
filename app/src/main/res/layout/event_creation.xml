@@ -52,4 +52,5 @@
         android:text="Create Event"
         android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"/>
+
 </LinearLayout>
