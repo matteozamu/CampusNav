@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- New Event Creation Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create New Event"
+        android:textSize="18sp"
+        android:layout_marginTop="24dp" />
+
+    <EditText
+        android:id="@+id/eventCreatorName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event Creator Name"
+        android:inputType="textPersonName"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/eventDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event Date (e.g., YYYY-MM-DD)"
+        android:inputType="date"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/eventTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event Time (e.g., HH:MM)"
+        android:inputType="time"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/eventType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event Type"
+        android:inputType="text"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/createEventButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Event"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"/>
+</LinearLayout>

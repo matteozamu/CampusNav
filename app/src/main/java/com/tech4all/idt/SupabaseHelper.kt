@@ -36,6 +36,15 @@ data class WifiLocation(
     // Add other columns like 'created_at' if needed/present in your table
 )
 
+@Serializable
+data class Event(
+    @SerialName("id") val id: Long? = null,
+    @SerialName("creator_name") val creatorName: String,
+    @SerialName("date") val date: String,
+    @SerialName("time") val time: String,
+    @SerialName("type") val type: String
+)
+
 object SupabaseHelper {
     // Assume you have your Supabase URL and API key defined as constants or retrieved from configuration
     private const val SUPABASE_URL = "https://vrykwubmpmlwobfjcurg.supabase.co"
@@ -112,6 +121,18 @@ object SupabaseHelper {
             } catch (e: Exception) {
                 Log.e("Supabase", "Error fetching Wi-Fi data: ${e.message}")
                 emptyList()
+            }
+        }
+    }
+
+    suspend fun insertEvent(event: Event) {
+        withContext(Dispatchers.IO) {
+            try {
+                supabase.postgrest["events"].insert(event)
+                Log.d("Supabase", "Event data inserted successfully")
+            } catch (e: Exception) {
+                Log.e("Supabase", "Error inserting event data: ${e.message}", e)
+                throw e // Re-throw the exception to handle it in the calling code
             }
         }
     }

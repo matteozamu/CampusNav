@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         val scanButton: Button = findViewById(R.id.scanButton)
         speechToggleButton = findViewById(R.id.speechToggleButton)
         val saveButton: Button = findViewById(R.id.saveButton)
+        val newEventButton : Button = findViewById(R.id.newEventButton) //find the new button
 
         positionIdEditText = findViewById<EditText>(R.id.positionId)
 
@@ -66,14 +67,11 @@ class MainActivity : AppCompatActivity() {
             val positionIdText = positionIdEditText.text.toString()
             if (positionIdText.isNotEmpty()) {
                 try {
-                    val positionId = positionIdText.toInt() // or toInt() if positionId is an Integer
-                    // Now you have the position ID and can use it as needed
+                    val positionId = positionIdText.toInt()
                     Log.d("PositionID", "Position ID: $positionId")
 
-                    // Example: Call your save function
                     saveScanResults(positionId)
                 } catch (e: NumberFormatException) {
-                    // Handle the case where the input is not a valid number
                     Toast.makeText(this, "Invalid position ID", Toast.LENGTH_SHORT).show()
                 }
             } else {
@@ -85,15 +83,19 @@ class MainActivity : AppCompatActivity() {
         speechToggleButton.setOnCheckedChangeListener { _, isChecked ->
             isSpeechEnabled = isChecked
             if (isChecked) {
-                // Start speaking immediately if it's checked
                 textToSpeech.speak("Speech enabled", TextToSpeech.QUEUE_FLUSH, null, null)
             } else {
-                // Stop speaking immediately if it's unchecked
                 textToSpeech.stop()
             }
         }
 
         requestLocationPermission()
+
+        // New Event Button Click Listener
+        newEventButton.setOnClickListener {
+            val intent = Intent(this, CreateEventActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private val requestPermissions =
