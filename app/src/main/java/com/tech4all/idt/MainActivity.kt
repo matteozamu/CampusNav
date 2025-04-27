@@ -27,6 +27,8 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import android.util.Log
 import android.widget.EditText
+import com.tech4all.idt.yolov8tflite.CameraActivity
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var wifiManager: WifiManager
@@ -36,6 +38,9 @@ class MainActivity : AppCompatActivity() {
     private var isSpeechEnabled = true
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var positionIdEditText: EditText
+    private lateinit var startCameraButton: Button // Nuovo bottone per avviare CameraActivity
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +99,15 @@ class MainActivity : AppCompatActivity() {
         // New Event Button Click Listener
         newEventButton.setOnClickListener {
             val intent = Intent(this, CreateEventActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Initialize startCameraButton here by finding it by id
+        startCameraButton = findViewById(R.id.startCameraButton)
+
+        // Now you can safely use startCameraButton
+        startCameraButton.setOnClickListener {
+            val intent = Intent(this, CameraActivity::class.java)
             startActivity(intent)
         }
     }
