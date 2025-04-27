@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:background="@android:color/holo_red_light"
+        android:background="@android:color/white"
         android:contentDescription="@string/back_button_description"
         android:src="@drawable/ic_back_arrow"
         app:layout_constraintStart_toStartOf="parent"
