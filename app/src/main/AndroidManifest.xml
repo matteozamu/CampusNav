@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+
 
     <application
         android:allowBackup="true"
@@ -20,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IDT"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -27,16 +30,23 @@
             android:theme="@style/Theme.IDT">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".CreateEventActivity"
             android:exported="false" />
+
         <activity
             android:name="com.tech4all.idt.yolov8tflite.CameraActivity"
             android:exported="false" />
+
+        <!-- NEW -->
+        <activity
+            android:name=".GemmaActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

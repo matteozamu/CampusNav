@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var positionIdEditText: EditText
     private lateinit var startCameraButton: Button // Nuovo bottone per avviare CameraActivity
-
+    private lateinit var gemmaButton: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,6 +108,14 @@ class MainActivity : AppCompatActivity() {
         // Now you can safely use startCameraButton
         startCameraButton.setOnClickListener {
             val intent = Intent(this, CameraActivity::class.java)
+            startActivity(intent)
+        }
+
+        gemmaButton = findViewById(R.id.gemmaButton)
+
+        // Gemma Button Click Listener
+        gemmaButton.setOnClickListener {
+            val intent = Intent(this, GemmaActivity::class.java)
             startActivity(intent)
         }
     }

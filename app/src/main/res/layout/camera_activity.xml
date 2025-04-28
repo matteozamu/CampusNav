@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="656dp"
         android:background="@android:color/white"
         android:contentDescription="@string/back_button_description"
         android:src="@drawable/ic_back_arrow"

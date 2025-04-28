@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="bounding_box_color">#234567</color>
+    <color name="darkRed">#CC0000</color>
 </resources>
