@@ -17,14 +17,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import okhttp3.*
-import java.io.File
-import java.io.IOException
-import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class GemmaActivity : AppCompatActivity() {
 
-    private val serverUrl = "http://YOUR_COMPUTER_IP:PORT/upload" // <-- replace with your local API endpoint!
+    // UPDATE your server IP and port here:
+    private val serverBaseUrl = "http://YOUR_COMPUTER_IP:8000"
 
     private lateinit var recordButton: Button
     private lateinit var pickButton: Button
@@ -87,7 +91,7 @@ class GemmaActivity : AppCompatActivity() {
     private fun checkAndRequestPermissions(onGranted: () -> Unit) {
         val permissionsNeeded = mutableListOf(Manifest.permission.CAMERA)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissionsNeeded.add(Manifest.permission.READ_MEDIA_VIDEO)
         } else {
             permissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -127,18 +131,19 @@ class GemmaActivity : AppCompatActivity() {
     }
 
     private fun uploadVideo(uri: Uri) {
-        val file = File(getRealPathFromUri(uri))
+        val file = copyUriToTempFile(uri)
+
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
-                "video",
+                "file", // <- MUST match FastAPI `file: UploadFile`
                 file.name,
-                RequestBody.create("video/mp4".toMediaTypeOrNull(), file)
+                file.asRequestBody("video/mp4".toMediaTypeOrNull())
             )
             .build()
 
         val request = Request.Builder()
-            .url(serverUrl)
+            .url("$serverBaseUrl/upload_video")
             .post(requestBody)
             .build()
 
@@ -148,7 +153,6 @@ class GemmaActivity : AppCompatActivity() {
                 runOnUiThread {
                     Toast.makeText(this@GemmaActivity, "Upload failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
-                Log.e("UPLOAD", "Upload error: ", e)
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -165,12 +169,14 @@ class GemmaActivity : AppCompatActivity() {
 
     private fun sendQuestion(question: String) {
         val client = OkHttpClient()
-        val requestBody = FormBody.Builder()
-            .add("question", question)
-            .build()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("question", question)
+
+        val requestBody = jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
 
         val request = Request.Builder()
-            .url("$serverUrl/question") // assumes /question endpoint exists
+            .url("$serverBaseUrl/ask_question")
             .post(requestBody)
             .build()
 
@@ -184,19 +190,26 @@ class GemmaActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val answer = response.body?.string()
                 runOnUiThread {
-                    Toast.makeText(this@GemmaActivity, "Answer: $answer", Toast.LENGTH_LONG).show()
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@GemmaActivity, "Answer: $answer", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this@GemmaActivity, "Failed to get answer: ${response.message}", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         })
     }
 
-    private fun getRealPathFromUri(uri: Uri): String {
-        val projection = arrayOf(MediaStore.Video.Media.DATA)
-        contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
-            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
-            cursor.moveToFirst()
-            return cursor.getString(columnIndex)
-        }
-        throw IllegalArgumentException("Unable to retrieve path from uri")
+    private fun copyUriToTempFile(uri: Uri): File {
+        val inputStream = contentResolver.openInputStream(uri)
+            ?: throw IllegalArgumentException("Cannot open input stream from URI")
+        val tempFile = File.createTempFile("upload_", ".mp4", cacheDir)
+        val outputStream = FileOutputStream(tempFile)
+
+        inputStream.copyTo(outputStream)
+        inputStream.close()
+        outputStream.close()
+
+        return tempFile
     }
 }
