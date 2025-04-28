@@ -2,6 +2,7 @@ package com.tech4all.idt
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -18,17 +19,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 
 class GemmaActivity : AppCompatActivity() {
 
-    // UPDATE your server IP and port here:
-    private val serverBaseUrl = "http://YOUR_COMPUTER_IP:8000"
+    private val serverBaseUrl = "http://192.168.X.X:8000" // 👈 Your new updated server URL
 
     private lateinit var recordButton: Button
     private lateinit var pickButton: Button
@@ -131,19 +127,20 @@ class GemmaActivity : AppCompatActivity() {
     }
 
     private fun uploadVideo(uri: Uri) {
-        val file = copyUriToTempFile(uri)
+        Toast.makeText(this, "Uploading video...", Toast.LENGTH_SHORT).show()
 
+        val file = File(getRealPathFromUri(uri))
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
-                "file", // <- MUST match FastAPI `file: UploadFile`
+                "video",
                 file.name,
-                file.asRequestBody("video/mp4".toMediaTypeOrNull())
+                RequestBody.create("video/mp4".toMediaTypeOrNull(), file)
             )
             .build()
 
         val request = Request.Builder()
-            .url("$serverBaseUrl/upload_video")
+            .url("$serverBaseUrl/upload")
             .post(requestBody)
             .build()
 
@@ -153,12 +150,14 @@ class GemmaActivity : AppCompatActivity() {
                 runOnUiThread {
                     Toast.makeText(this@GemmaActivity, "Upload failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
+                Log.e("UPLOAD", "Upload error: ", e)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                val responseBody = response.body?.string()
                 runOnUiThread {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@GemmaActivity, "Video uploaded successfully!", Toast.LENGTH_SHORT).show()
+                        showSummaryDialog(responseBody ?: "No summary received.")
                     } else {
                         Toast.makeText(this@GemmaActivity, "Upload failed: ${response.message}", Toast.LENGTH_LONG).show()
                     }
@@ -168,15 +167,15 @@ class GemmaActivity : AppCompatActivity() {
     }
 
     private fun sendQuestion(question: String) {
+        Toast.makeText(this, "Sending question...", Toast.LENGTH_SHORT).show()
+
         val client = OkHttpClient()
-
-        val jsonObject = JSONObject()
-        jsonObject.put("question", question)
-
-        val requestBody = jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
+        val requestBody = FormBody.Builder()
+            .add("question", question)
+            .build()
 
         val request = Request.Builder()
-            .url("$serverBaseUrl/ask_question")
+            .url("$serverBaseUrl/ask")
             .post(requestBody)
             .build()
 
@@ -185,31 +184,45 @@ class GemmaActivity : AppCompatActivity() {
                 runOnUiThread {
                     Toast.makeText(this@GemmaActivity, "Question sending failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
+                Log.e("QUESTION", "Question sending error: ", e)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val answer = response.body?.string()
                 runOnUiThread {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@GemmaActivity, "Answer: $answer", Toast.LENGTH_LONG).show()
+                        showAnswerDialog(answer ?: "No answer received.")
                     } else {
-                        Toast.makeText(this@GemmaActivity, "Failed to get answer: ${response.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@GemmaActivity, "Question failed: ${response.message}", Toast.LENGTH_LONG).show()
                     }
                 }
             }
         })
     }
 
-    private fun copyUriToTempFile(uri: Uri): File {
-        val inputStream = contentResolver.openInputStream(uri)
-            ?: throw IllegalArgumentException("Cannot open input stream from URI")
-        val tempFile = File.createTempFile("upload_", ".mp4", cacheDir)
-        val outputStream = FileOutputStream(tempFile)
+    private fun showSummaryDialog(summary: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Video Analysis Summary")
+            .setMessage(summary)
+            .setPositiveButton("OK", null)
+            .show()
+    }
 
-        inputStream.copyTo(outputStream)
-        inputStream.close()
-        outputStream.close()
+    private fun showAnswerDialog(answer: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Answer from Gemma3")
+            .setMessage(answer)
+            .setPositiveButton("OK", null)
+            .show()
+    }
 
-        return tempFile
+    private fun getRealPathFromUri(uri: Uri): String {
+        val projection = arrayOf(MediaStore.Video.Media.DATA)
+        contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+            cursor.moveToFirst()
+            return cursor.getString(columnIndex)
+        }
+        throw IllegalArgumentException("Unable to retrieve path from uri")
     }
 }
