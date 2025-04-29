@@ -25,7 +25,7 @@ import java.io.IOException
 
 class GemmaActivity : AppCompatActivity() {
 
-    private val serverBaseUrl = "http://192.168.X.X:8000" // 👈 Your new updated server URL
+    private val serverBaseUrl = "http://192.168.1.140:8000" // 👈 Your new updated server URL
 
     private lateinit var recordButton: Button
     private lateinit var pickButton: Button
@@ -130,50 +130,97 @@ class GemmaActivity : AppCompatActivity() {
     private fun uploadVideo(uri: Uri) {
         Toast.makeText(this, "Uploading video...", Toast.LENGTH_SHORT).show()
 
-        val file = File(getRealPathFromUri(uri))
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "video",
-                file.name,
-                file.asRequestBody("video/mp4".toMediaTypeOrNull())
-            )
-            .build()
+        try {
+            val file = getFileFromUri(uri)
 
-        val request = Request.Builder()
-            .url("$serverBaseUrl/upload_video")
-            .post(requestBody)
-            .build()
+            Log.d("UPLOAD", "File path: ${file.absolutePath}, exists: ${file.exists()}, length: ${file.length()}")
 
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@GemmaActivity, "Upload failed: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-                Log.e("UPLOAD", "Upload error: ", e)
-            }
+            // Verifica MIME type del file
+            val mimeType = getMimeType(uri)
+            Log.d("UPLOAD", "Mime type: $mimeType")
 
-            override fun onResponse(call: Call, response: Response) {
-                val responseBody = response.body?.string()
-                runOnUiThread {
-                    if (response.isSuccessful) {
-                        showSummaryDialog(responseBody ?: "No summary received.")
-                    } else {
-                        Toast.makeText(this@GemmaActivity, "Upload failed: ${response.message}", Toast.LENGTH_LONG).show()
+            if (mimeType?.startsWith("video/") == true) {
+                val requestBody = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart(
+                        "file",
+                        file.name,
+                        file.asRequestBody("video/mp4".toMediaTypeOrNull())
+                    )
+                    .build()
+
+                val client = OkHttpClient.Builder()
+                    .connectTimeout(60, java.util.concurrent.TimeUnit.SECONDS)  // Timeout di connessione
+                    .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)    // Timeout per scrittura
+                    .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)     // Timeout per lettura
+                    .build()
+
+                val request = Request.Builder()
+                    .url("$serverBaseUrl/upload_video")
+                    .post(requestBody)
+                    .build()
+
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        runOnUiThread {
+                            Toast.makeText(this@GemmaActivity, "Upload failed: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
+                        Log.e("UPLOAD", "Upload error: ", e)
                     }
-                }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val responseBody = response.body?.string()
+                        runOnUiThread {
+                            if (response.isSuccessful) {
+                                showSummaryDialog(responseBody ?: "No summary received.")
+                            } else {
+                                Toast.makeText(this@GemmaActivity, "Upload failed: ${response.message}", Toast.LENGTH_LONG).show()
+                                Log.e("UPLOAD", "Response error: ${response.code} - $responseBody")
+                            }
+                        }
+                    }
+                })
+            } else {
+                Toast.makeText(this, "Invalid file type. Please select a video file.", Toast.LENGTH_LONG).show()
             }
-        })
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error preparing file: ${e.message}", Toast.LENGTH_LONG).show()
+            Log.e("UPLOAD", "File preparation error: ", e)
+        }
+    }
+
+    private fun getMimeType(uri: Uri): String? {
+        return contentResolver.getType(uri)
+    }
+
+    private fun getFileFromUri(uri: Uri): File {
+        val inputStream = contentResolver.openInputStream(uri)
+            ?: throw IOException("Unable to open input stream from URI")
+
+        val tempFile = File.createTempFile("upload", ".mp4", cacheDir)
+        tempFile.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+
+        return tempFile
     }
 
     private fun sendQuestion(question: String) {
         Toast.makeText(this, "Sending question...", Toast.LENGTH_SHORT).show()
 
         val client = OkHttpClient()
-        val requestBody = FormBody.Builder()
-            .add("question", question)
-            .build()
+
+        // Crea il corpo della richiesta in formato JSON
+        val jsonBody = """
+        {
+            "question": "$question"
+        }
+    """
+
+        val mediaType = "application/json".toMediaTypeOrNull()
+        val requestBody = RequestBody.create(mediaType, jsonBody)
+
+        Log.d("SEND_QUESTION", "Sending question JSON: $jsonBody")
 
         val request = Request.Builder()
             .url("$serverBaseUrl/ask_question")
@@ -195,11 +242,14 @@ class GemmaActivity : AppCompatActivity() {
                         showAnswerDialog(answer ?: "No answer received.")
                     } else {
                         Toast.makeText(this@GemmaActivity, "Question failed: ${response.message}", Toast.LENGTH_LONG).show()
+                        Log.e("QUESTION", "Failed response: ${response.code} - $answer")
                     }
                 }
             }
         })
     }
+
+
 
     private fun showSummaryDialog(summary: String) {
         AlertDialog.Builder(this)
