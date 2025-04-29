@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
 
@@ -135,12 +136,12 @@ class GemmaActivity : AppCompatActivity() {
             .addFormDataPart(
                 "video",
                 file.name,
-                RequestBody.create("video/mp4".toMediaTypeOrNull(), file)
+                file.asRequestBody("video/mp4".toMediaTypeOrNull())
             )
             .build()
 
         val request = Request.Builder()
-            .url("$serverBaseUrl/upload")
+            .url("$serverBaseUrl/upload_video")
             .post(requestBody)
             .build()
 
@@ -175,7 +176,7 @@ class GemmaActivity : AppCompatActivity() {
             .build()
 
         val request = Request.Builder()
-            .url("$serverBaseUrl/ask")
+            .url("$serverBaseUrl/ask_question")
             .post(requestBody)
             .build()
 
