@@ -5,44 +5,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Press Scan to get WiFi BSSIDs"
-        android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/scanButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Scan WiFi" />
-
-    <!-- Toggle button to turn speech on or off -->
-    <ToggleButton
-        android:id="@+id/speechToggleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOn="Speech On"
-        android:textOff="Speech Off"
-        android:checked="true" />
-
-    <EditText
-        android:id="@+id/positionId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Position"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"/>
-
     <Button
         android:id="@+id/newEventButton"
         android:layout_width="wrap_content"
@@ -64,6 +26,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start Gemma"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/wifiButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WiFi Localization"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"/>
 
