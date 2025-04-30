@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">IDT</string>
     <string name="back_button_description">Back</string>
+    <string name="inference_time">%dms</string>
 </resources>
