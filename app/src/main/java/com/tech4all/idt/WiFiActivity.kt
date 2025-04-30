@@ -26,7 +26,12 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+/**
+ * WiFiActivity handles Wi-Fi scanning, voice feedback, and saving scan results to a database.
+ */
 class WiFiActivity : AppCompatActivity() {
+
+    // Define UI elements
     private lateinit var wifiManager: WifiManager
     private lateinit var textView: TextView
     private lateinit var textToSpeech: TextToSpeech
@@ -34,31 +39,39 @@ class WiFiActivity : AppCompatActivity() {
     private lateinit var positionIdEditText: EditText
     private lateinit var scanButton: Button
     private lateinit var saveButton: Button
-    private var isSpeechEnabled = true
+    private var isSpeechEnabled = true // Flag to toggle speech feedback
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
 
+    /**
+     * onCreate initializes the activity, sets up listeners, and checks permissions.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wifi)
 
+        // Initialize UI elements
         textView = findViewById(R.id.textView)
         scanButton = findViewById(R.id.scanButton)
         speechToggleButton = findViewById(R.id.speechToggleButton)
         saveButton = findViewById(R.id.saveButton)
         positionIdEditText = findViewById(R.id.positionId)
 
+        // Initialize WifiManager and Location client
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        // Initialize TextToSpeech
         textToSpeech = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 textToSpeech.language = Locale.getDefault()
             }
         }
 
+        // Set up button listeners
         scanButton.setOnClickListener {
-            textView.text = ""
+            textView.text = ""  // Clear previous results
             scanWifi()
         }
 
@@ -68,7 +81,7 @@ class WiFiActivity : AppCompatActivity() {
                 try {
                     val positionId = positionIdText.toInt()
                     Log.d("PositionID", "Position ID: $positionId")
-                    saveScanResults(positionId)
+                    saveScanResults(positionId) // Save scan results
                 } catch (e: NumberFormatException) {
                     Toast.makeText(this, "Invalid position ID", Toast.LENGTH_SHORT).show()
                 }
@@ -77,6 +90,7 @@ class WiFiActivity : AppCompatActivity() {
             }
         }
 
+        // Toggle speech feedback based on button state
         speechToggleButton.setOnCheckedChangeListener { _, isChecked ->
             isSpeechEnabled = isChecked
             if (isChecked) {
@@ -86,16 +100,21 @@ class WiFiActivity : AppCompatActivity() {
             }
         }
 
+        // Check for location permissions
         checkAndRequestLocationPermission()
     }
 
+    /**
+     * checkAndRequestLocationPermission checks if location permission is granted,
+     * if not, it requests permission from the user.
+     */
     private fun checkAndRequestLocationPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            scanWifi()
+            scanWifi()  // Permission granted, proceed with scanning
         } else {
             ActivityCompat.requestPermissions(
                 this,
@@ -105,6 +124,9 @@ class WiFiActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * onRequestPermissionsResult handles the result of permission requests.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -113,54 +135,70 @@ class WiFiActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                scanWifi()
+                scanWifi()  // Permission granted, proceed with scanning
             } else {
                 Toast.makeText(this, "Location permission is required for Wi-Fi scanning", Toast.LENGTH_LONG).show()
             }
         }
     }
 
+    /**
+     * scanWifi starts a Wi-Fi scan and registers a receiver to get the scan results.
+     */
     private fun scanWifi() {
         registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
         val success = wifiManager.startScan()
         if (!success) {
-            textView.text = "Scan failed"
+            textView.text = "Scan failed"  // Handle scan failure
         }
     }
 
+    /**
+     * wifiScanReceiver handles broadcasted scan results once the Wi-Fi scan is complete.
+     */
     private val wifiScanReceiver = object : BroadcastReceiver() {
         @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
         override fun onReceive(context: Context, intent: Intent) {
             val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
             if (success) {
-                displayResults()
+                displayResults()  // Display scan results
             }
         }
     }
 
+    /**
+     * displayResults processes and displays the Wi-Fi scan results.
+     */
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     private fun displayResults() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) return
 
+        // Sort results by signal strength (level)
         val results = wifiManager.scanResults
         val sortedResults = results.sortedByDescending { it.level }
 
         val sb = StringBuilder()
+        // Display top 5 strongest networks
         for (result in sortedResults.take(5)) {
             sb.append(result.SSID)
                 .append(" - BSSID: ").append(result.BSSID)
                 .append(" - Signal Strength: ").append(result.level).append(" dBm\n")
         }
 
-        textView.text = sb.toString()
+        textView.text = sb.toString()  // Show results on UI
 
+        // Optionally speak the results
         if (isSpeechEnabled) {
             textToSpeech.speak(sb.toString(), TextToSpeech.QUEUE_FLUSH, null, null)
         }
     }
 
+    /**
+     * saveScanResults saves the top 5 Wi-Fi scan results to a database.
+     * @param positionId The position identifier for the scan.
+     */
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun saveScanResults(positionId: Int) {
         Log.d("SaveScanResults", "saveScanResults called")
@@ -172,19 +210,23 @@ class WiFiActivity : AppCompatActivity() {
             val sortedResults = results.sortedByDescending { it.level }
             Log.d("SaveScanResults", "Wi-Fi scan results size: ${results.size}")
 
+            // Log and save top 5 results
             for (result in sortedResults.take(5)) {
                 Log.d("SaveScanResults", "BSSID: ${result.BSSID}, Signal Strength: ${result.level}")
-                SupabaseHelper.insertWifiScan(positionId, result.SSID, result.BSSID, result.level)
+                SupabaseHelper.insertWifiScan(positionId, result.SSID, result.BSSID, result.level)  // Insert data to database
             }
 
-            Toast.makeText(applicationContext, "Data saved!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Data saved!", Toast.LENGTH_SHORT).show()  // Show success message
         }
     }
 
+    /**
+     * onDestroy cleans up resources when the activity is destroyed.
+     */
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(wifiScanReceiver)
-        textToSpeech.stop()
-        textToSpeech.shutdown()
+        unregisterReceiver(wifiScanReceiver)  // Unregister Wi-Fi receiver
+        textToSpeech.stop()  // Stop speech synthesis
+        textToSpeech.shutdown()  // Release resources
     }
 }
