@@ -10,9 +10,11 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -66,6 +68,13 @@ class GemmaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gemma)
+
+        // Set up the action bar with a back button
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        onBackPressedDispatcher.addCallback(this) {
+            // Qui il comportamento quando l’utente preme "Indietro"
+            finish() // o fai qualcosa prima di uscire
+        }
 
         // Initialize UI components
         recordButton = findViewById(R.id.recordButton)
@@ -357,5 +366,18 @@ class GemmaActivity : AppCompatActivity() {
             return cursor.getString(columnIndex)
         }
         throw IllegalArgumentException("Unable to retrieve path from uri")
+    }
+
+    /**
+     * Handle the back button press in the action bar.
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish() // oppure usa onBackPressedDispatcher.onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

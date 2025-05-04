@@ -11,11 +11,13 @@ import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.activity.addCallback
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -50,6 +52,13 @@ class WiFiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wifi)
+
+        // Set up the action bar with a back button
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        onBackPressedDispatcher.addCallback(this) {
+            // Qui il comportamento quando l’utente preme "Indietro"
+            finish() // o fai qualcosa prima di uscire
+        }
 
         // Initialize UI elements
         textView = findViewById(R.id.textView)
@@ -228,5 +237,18 @@ class WiFiActivity : AppCompatActivity() {
         unregisterReceiver(wifiScanReceiver)  // Unregister Wi-Fi receiver
         textToSpeech.stop()  // Stop speech synthesis
         textToSpeech.shutdown()  // Release resources
+    }
+
+    /**
+     * Handle the back button press in the action bar.
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish() // oppure usa onBackPressedDispatcher.onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

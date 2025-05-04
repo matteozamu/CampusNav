@@ -4,15 +4,18 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
 
 /**
  * CreateEventActivity is an activity where users can create a new event by filling in
@@ -33,6 +36,15 @@ class CreateEventActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.event_creation) // Setting the content view to the event creation layout
+
+        // Set up the action bar with a back button
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        onBackPressedDispatcher.addCallback(this) {
+            // Qui il comportamento quando l’utente preme "Indietro"
+            finish() // o fai qualcosa prima di uscire
+        }
+
+
 
         // Find the EditText fields and the button by their ID from the layout
         val eventCreatorNameEditText = findViewById<EditText>(R.id.eventCreatorName)
@@ -138,4 +150,19 @@ class CreateEventActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat(myFormat, Locale.US) // Initialize SimpleDateFormat
         eventTimeEditText.setText(sdf.format(calendar.time)) // Set the formatted time to the EditText field
     }
+
+    /**
+     * Handle the back button press in the action bar.
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish() // oppure usa onBackPressedDispatcher.onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
 }
