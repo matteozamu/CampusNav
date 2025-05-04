@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Create New Event"
         android:textSize="18sp"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="80dp" />
 
     <EditText
         android:id="@+id/eventCreatorName"
