@@ -56,8 +56,7 @@ class WiFiActivity : AppCompatActivity() {
         // Set up the action bar with a back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         onBackPressedDispatcher.addCallback(this) {
-            // Qui il comportamento quando l’utente preme "Indietro"
-            finish() // o fai qualcosa prima di uscire
+            finish()
         }
 
         // Initialize UI elements
@@ -245,7 +244,7 @@ class WiFiActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                finish() // oppure usa onBackPressedDispatcher.onBackPressed()
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

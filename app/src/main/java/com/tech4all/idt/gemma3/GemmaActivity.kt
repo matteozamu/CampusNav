@@ -83,10 +83,10 @@ class GemmaActivity : AppCompatActivity() {
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
         // Set up the action bar with a back button
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         onBackPressedDispatcher.addCallback(this) {
-            // Qui il comportamento quando l’utente preme "Indietro"
-            finish() // o fai qualcosa prima di uscire
+            // eventual logic here
+            finish()
         }
 
         // Initialize UI components
@@ -248,9 +248,11 @@ class GemmaActivity : AppCompatActivity() {
                         val responseBody = response.body?.string()
                         runOnUiThread {
                             if (response.isSuccessful) {
-                                showSummaryDialog(responseBody ?: "No summary received.")
+                                addMessageToChat("I uploaded a video, please write a summary", isUser = true)
+
+                                addMessageToChat(responseBody ?: "No summary received.", isUser = false)
                             } else {
-                                Toast.makeText(this@GemmaActivity, "Upload failed: ${response.message}", Toast.LENGTH_LONG).show()
+                                addMessageToChat("Upload failed: ${response.message}", isUser = false)
                                 Log.e("UPLOAD", "Response error: ${response.code} - $responseBody")
                             }
                         }
@@ -327,7 +329,7 @@ class GemmaActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
                     loadingSpinner.visibility = View.GONE
-                    addMessageToChat("Errore durante l'invio della domanda: ${e.message}", isUser = false)
+                    addMessageToChat("Error when sending the question: ${e.message}", isUser = false)
                 }
                 Log.e("QUESTION", "Question sending error: ", e)
             }
@@ -337,9 +339,9 @@ class GemmaActivity : AppCompatActivity() {
                 runOnUiThread {
                     loadingSpinner.visibility = View.GONE
                     if (response.isSuccessful) {
-                        addMessageToChat(answer ?: "Nessuna risposta ricevuta.", isUser = false)
+                        addMessageToChat(answer ?: "No answer received.", isUser = false)
                     } else {
-                        addMessageToChat("Errore dal server: ${response.message}", isUser = false)
+                        addMessageToChat("Error from the server: ${response.message}", isUser = false)
                         Log.e("QUESTION", "Failed response: ${response.code} - $answer")
                     }
                 }
@@ -397,7 +399,7 @@ class GemmaActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                finish() // oppure usa onBackPressedDispatcher.onBackPressed()
+                finish() // maybe redundant (?)
                 true
             }
             else -> super.onOptionsItemSelected(item)

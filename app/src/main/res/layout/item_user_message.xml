@@ -13,5 +13,6 @@
         android:background="@drawable/user_message_bg"
         android:textColor="#FFFFFF"
         android:padding="12dp"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:ellipsize="none"/>
 </LinearLayout>
