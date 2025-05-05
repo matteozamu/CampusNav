@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.tech4all.idt.gemma3.GemmaActivity
 import com.tech4all.idt.yolov8tflite.CameraActivity
 
 

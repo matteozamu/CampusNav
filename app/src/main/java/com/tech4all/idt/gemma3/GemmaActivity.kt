@@ -1,4 +1,4 @@
-package com.tech4all.idt
+package com.tech4all.idt.gemma3
 
 import android.Manifest
 import android.app.Activity
@@ -13,18 +13,24 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.tech4all.idt.R
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.IOException
+import android.view.View
+
 
 /**
  * Activity responsible for interacting with the FastAPI server.
@@ -42,7 +48,10 @@ class GemmaActivity : AppCompatActivity() {
     private lateinit var uploadButton: Button
     private lateinit var askButton: Button
     private lateinit var questionInput: EditText
-
+    private lateinit var chatRecyclerView: RecyclerView
+    private lateinit var chatAdapter: ChatAdapter
+    private val chatMessages = mutableListOf<ChatMessage>()
+    private val loadingSpinner: ProgressBar by lazy { findViewById(R.id.loadingSpinner) }
     // Holds the URI of the selected video
     private var selectedVideoUri: Uri? = null
 
@@ -68,6 +77,10 @@ class GemmaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gemma)
+        chatRecyclerView = findViewById(R.id.chatRecyclerView)
+        chatAdapter = ChatAdapter(chatMessages)
+        chatRecyclerView.adapter = chatAdapter
+        chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
         // Set up the action bar with a back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
@@ -103,13 +116,19 @@ class GemmaActivity : AppCompatActivity() {
         }
 
         askButton.setOnClickListener {
-            val question = questionInput.text.toString()
-            if (question.isNotBlank()) {
-                sendQuestion(question) // Send question to the server
-            } else {
-                Toast.makeText(this, "Please enter a question!", Toast.LENGTH_SHORT).show()
+            val question = questionInput.text.toString().trim()
+            if (question.isNotEmpty()) {
+                questionInput.text.clear()
+                sendQuestion(question)
             }
         }
+
+    }
+
+    private fun addMessageToChat(message: String, isUser: Boolean) {
+        chatMessages.add(ChatMessage(message, isUser))
+        chatAdapter.notifyItemInserted(chatMessages.size - 1)
+        chatRecyclerView.scrollToPosition(chatMessages.size - 1)
     }
 
     /**
@@ -285,12 +304,11 @@ class GemmaActivity : AppCompatActivity() {
 
         val client = OkHttpClient()
 
-        // Create the JSON body for the question request
         val jsonBody = """
         {
             "question": "$question"
         }
-    """
+    """.trimIndent()
 
         val mediaType = "application/json".toMediaTypeOrNull()
         val requestBody = jsonBody.toRequestBody(mediaType)
@@ -302,28 +320,33 @@ class GemmaActivity : AppCompatActivity() {
             .post(requestBody)
             .build()
 
+        loadingSpinner.visibility = View.VISIBLE
+        addMessageToChat(question, isUser = true)
+
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
-                    Toast.makeText(this@GemmaActivity, "Question sending failed: ${e.message}", Toast.LENGTH_LONG).show()
+                    loadingSpinner.visibility = View.GONE
+                    addMessageToChat("Errore durante l'invio della domanda: ${e.message}", isUser = false)
                 }
                 Log.e("QUESTION", "Question sending error: ", e)
             }
 
-            // Handle the server's response for the question
             override fun onResponse(call: Call, response: Response) {
                 val answer = response.body?.string()
                 runOnUiThread {
+                    loadingSpinner.visibility = View.GONE
                     if (response.isSuccessful) {
-                        showAnswerDialog(answer ?: "No answer received.")
+                        addMessageToChat(answer ?: "Nessuna risposta ricevuta.", isUser = false)
                     } else {
-                        Toast.makeText(this@GemmaActivity, "Question failed: ${response.message}", Toast.LENGTH_LONG).show()
+                        addMessageToChat("Errore dal server: ${response.message}", isUser = false)
                         Log.e("QUESTION", "Failed response: ${response.code} - $answer")
                     }
                 }
             }
         })
     }
+
 
     /**
      * Displays a dialog showing the analysis summary of the uploaded video.

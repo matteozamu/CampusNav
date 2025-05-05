@@ -48,7 +48,7 @@
 
         <!-- NEW -->
         <activity
-            android:name=".GemmaActivity"
+            android:name=".gemma3.GemmaActivity"
             android:exported="false" />
 
         <activity
