@@ -6,35 +6,39 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/newEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Event"
+        android:id="@+id/wifiButton"
+        android:layout_width="1000dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
-        android:layout_gravity="center_horizontal"/>
+        android:text="WiFi Localization"
+        android:textSize="20sp" />
 
     <Button
-        android:id="@+id/startCameraButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Camera"
+        android:id="@+id/newEventButton"
+        android:layout_width="1000dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"/>
+        android:text="New Event"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/gemmaButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Gemma"
+        android:layout_width="1000dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"/>
+        android:text="Start Gemma"
+        android:textSize="20sp" />
 
     <Button
-        android:id="@+id/wifiButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WiFi Localization"
+        android:id="@+id/startCameraButton"
+        android:layout_width="1000dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"/>
+        android:text="Start Camera"
+        android:textSize="20sp" />
 
 </LinearLayout>
