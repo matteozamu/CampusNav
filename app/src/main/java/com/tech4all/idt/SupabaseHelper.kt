@@ -4,6 +4,8 @@ import android.util.Log
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.android.Android
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -50,6 +52,8 @@ object SupabaseHelper {
     // Assume you have your Supabase URL and API key defined as constants or retrieved from configuration
     private const val SUPABASE_URL = "https://vrykwubmpmlwobfjcurg.supabase.co"
     private const val SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyeWt3dWJtcG1sd29iZmpjdXJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MjI1NjksImV4cCI6MjA1OTA5ODU2OX0.4ywLkxN1Br0LqpXz1Tum-LtXdc2D0SukEYTI5J9dnuM"
+
+    private val ktorClient = HttpClient(Android)
 
     // Initialize Supabase client
     private val supabase: SupabaseClient = createSupabaseClient(

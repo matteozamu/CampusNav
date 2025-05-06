@@ -86,5 +86,5 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:supabase-kt:2.6.1")
     implementation("io.github.jan-tennert.supabase:postgrest-kt:2.6.1")
     implementation("io.ktor:ktor-client-core:2.0.0")
-    implementation("io.ktor:ktor-client-cio:2.0.0")
+    implementation("io.ktor:ktor-client-android:2.0.0")
 }

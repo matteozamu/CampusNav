@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
         newEventButton = findViewById(R.id.newEventButton) //find the new button
 
         // New Event Button Click Listener
