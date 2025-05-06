@@ -349,33 +349,6 @@ class GemmaActivity : AppCompatActivity() {
         })
     }
 
-
-    /**
-     * Displays a dialog showing the analysis summary of the uploaded video.
-     *
-     * @param summary The analysis summary to display in the dialog.
-     */
-    private fun showSummaryDialog(summary: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Video Analysis Summary")
-            .setMessage(summary)
-            .setPositiveButton("OK", null)
-            .show()
-    }
-
-    /**
-     * Displays a dialog showing the answer to the question asked.
-     *
-     * @param answer The answer received from the server.
-     */
-    private fun showAnswerDialog(answer: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Answer from Gemma3")
-            .setMessage(answer)
-            .setPositiveButton("OK", null)
-            .show()
-    }
-
     /**
      * Retrieves the real file path from the URI (useful for certain operations).
      *

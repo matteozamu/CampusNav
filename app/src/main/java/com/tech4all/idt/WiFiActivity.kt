@@ -44,6 +44,7 @@ class WiFiActivity : AppCompatActivity() {
     private lateinit var saveButton: Button
     private var isSpeechEnabled = true // Flag to toggle speech feedback
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var matchResultsTextView: TextView
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
 
@@ -66,6 +67,7 @@ class WiFiActivity : AppCompatActivity() {
         speechToggleButton = findViewById(R.id.speechToggleButton)
         saveButton = findViewById(R.id.saveButton)
         positionIdEditText = findViewById(R.id.positionId)
+        matchResultsTextView = findViewById(R.id.matchResultsTextView)
 
         // Initialize WifiManager and Location client
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -208,10 +210,17 @@ class WiFiActivity : AppCompatActivity() {
         // Call queryBestMatchingPosition with the extracted BSSIDs and signal strengths
         CoroutineScope(Dispatchers.Main).launch {
             val matches = SupabaseHelper.queryBestMatchingPosition(bssids, signalStrengths)
-            matches.forEach { (id, name) ->
-                Log.d("Match", "Position ID: $id, Label: $name")
+            val resultText = if (matches.isNotEmpty()) {
+                "You are near room: " + matches.joinToString(separator = "\n") { (id, name) ->
+                    "• ID: $id | Number: $name"
+                }
+            } else {
+                "No position founded."
             }
+
+            matchResultsTextView.text = resultText
         }
+
 
         // Optionally speak the results
         if (isSpeechEnabled) {
