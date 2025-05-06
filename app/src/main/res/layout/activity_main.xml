@@ -7,7 +7,7 @@
 
     <Button
         android:id="@+id/wifiButton"
-        android:layout_width="1000dp"
+        android:layout_width="363dp"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
@@ -16,7 +16,7 @@
 
     <Button
         android:id="@+id/newEventButton"
-        android:layout_width="1000dp"
+        android:layout_width="363dp"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
@@ -25,7 +25,7 @@
 
     <Button
         android:id="@+id/gemmaButton"
-        android:layout_width="1000dp"
+        android:layout_width="363dp"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
@@ -34,7 +34,7 @@
 
     <Button
         android:id="@+id/startCameraButton"
-        android:layout_width="1000dp"
+        android:layout_width="363dp"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
