@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
+import android.net.wifi.ScanResult
 
 /**
  * WiFiActivity handles Wi-Fi scanning, voice feedback, and saving scan results to a database.

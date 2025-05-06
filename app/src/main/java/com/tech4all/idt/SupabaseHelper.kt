@@ -47,6 +47,11 @@ data class Event(
     @SerialName("type") val type: String
 )
 
+@Serializable
+data class MatchedPosition(
+    @SerialName("position_id") val positionId: Int,
+    @SerialName("name") val name: String
+)
 
 object SupabaseHelper {
     // Assume you have your Supabase URL and API key defined as constants or retrieved from configuration
@@ -162,33 +167,18 @@ object SupabaseHelper {
                     )
                 )
 
-                response.decodeList<JsonObject>().map { row ->
-                    // Safely extract positionId
-                    val positionIdElement = row["position_id"]
-                    val positionId = if (positionIdElement != null && positionIdElement.jsonPrimitive.intOrNull != null) {
-                        positionIdElement.jsonPrimitive.intOrNull
-                    } else {
-                        null
-                    }
+                // Decode the response directly into a list of MatchedPosition
+                val matchedPositions = response.decodeList<MatchedPosition>()
 
-                    // Safely extract name
-                    val nameElement = row["name"]
-                    val name = if (nameElement != null && nameElement.jsonPrimitive.isString) {
-                        nameElement.jsonPrimitive.content
-                    } else {
-                        null
-                    }
+                // Map the data class objects to the desired Pair format
+                matchedPositions.map { matchedPosition ->
+                    Pair(matchedPosition.positionId, matchedPosition.name)
+                }
 
-                    if (positionId != null && name != null) {
-                        Pair(positionId, name)
-                    } else {
-                        null
-                    }
-                }.filterNotNull()
             } catch (e: Exception) {
                 Log.e("Supabase", "Error querying matched position: ${e.localizedMessage}", e)
                 emptyList()
-            } as List<Pair<Int, String>>
+            }
         }
     }
 
