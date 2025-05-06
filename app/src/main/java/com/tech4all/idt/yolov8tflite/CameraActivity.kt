@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.util.Size
 import android.widget.ImageButton
@@ -22,6 +23,7 @@ import com.tech4all.idt.R
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.core.graphics.createBitmap
+import java.util.Locale
 
 /**
  * CameraActivity manages the live camera feed, processes image frames
@@ -50,6 +52,12 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
     private lateinit var viewFinder: PreviewView
     private lateinit var backButton: ImageButton
 
+
+    // Object tracking for text-to-speech
+    private val trackedObjects: MutableMap<String, Int> = mutableMapOf()
+    private val absenceThreshold = 3 // max frames without object detection
+    private lateinit var tts: TextToSpeech
+
     /**
      * Called when the activity is created. Initializes UI, detector,
      * and sets up camera if permissions are granted.
@@ -63,6 +71,18 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
         overlay = findViewById(R.id.overlay)
         viewFinder = findViewById(R.id.view_finder)
         backButton = findViewById(R.id.backButton)
+
+        // Initialize text-to-speech
+        tts = TextToSpeech(this) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val result = tts.setLanguage(Locale.getDefault())
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Log.e("TTS", "Language not supported")
+                }
+            } else {
+                Log.e("TTS", "Failed to initialize")
+            }
+        }
 
         // Initialize and prepare the YOLO detector
         detector = Detector(baseContext, Constants.MODEL_PATH, Constants.LABELS_PATH, this)
@@ -245,8 +265,52 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
             this.inferenceTime.text = getString(R.string.inference_time, inferenceTime)
             overlay.apply {
                 setResults(boundingBoxes)
-                invalidate() // Redraw overlay
+                invalidate()
             }
+
+            // Update tracked objects
+            val currentLabels = boundingBoxes
+                .mapNotNull { it.clsName.trim().takeIf { name -> name.isNotEmpty() } }
+                .toSet()
+
+            for (label in currentLabels) {
+                if (!trackedObjects.containsKey(label)) {
+                    trackedObjects[label] = 0
+                    pronounceObject(label)
+                } else {
+                    trackedObjects[label] = 0
+                }
+            }
+
+            // Check for absent objects
+            val toRemove = mutableListOf<String>()
+            for ((label, count) in trackedObjects) {
+                if (!currentLabels.contains(label)) {
+                    val newCount = count + 1
+                    if (newCount >= absenceThreshold) {
+                        toRemove.add(label)
+                    } else {
+                        trackedObjects[label] = newCount
+                    }
+                }
+            }
+
+            for (label in toRemove) {
+                trackedObjects.remove(label)
+                Log.d("Tracker", "Oggetto rimosso: $label")
+            }
+
+            Log.d("Tracker", "Oggetti attualmente tracciati: $trackedObjects")
         }
     }
+
+    /**
+     * Pronounces an object name using Text-to-Speech.
+     */
+    private fun pronounceObject(objectName: String) {
+        if (this::tts.isInitialized) {
+            tts.speak(objectName, TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+    }
+
 }
