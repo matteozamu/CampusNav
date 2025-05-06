@@ -4,7 +4,6 @@ import android.util.Log
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.*
-import io.github.jan.supabase.postgrest.from
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,6 +12,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 
@@ -132,9 +132,62 @@ object SupabaseHelper {
                 supabase.postgrest["events"].insert(event)
                 Log.d("Supabase", "Event data inserted successfully")
             } catch (e: Exception) {
-                Log.e("Supabase", "Error inserting event data: ${e.message}", e)
-                throw e // Re-throw the exception to handle it in the calling code
+                Log.e("Supabase", "Error inserting event data: ${e.localizedMessage}", e)
+
+                // If it's an HttpRequestException, log more context
+                if (e is io.github.jan.supabase.exceptions.HttpRequestException) {
+                    Log.e("Supabase", "HTTP Request failed: ${e.message}")
+                }
+
+                throw e // Optional: rethrow or handle
             }
         }
     }
+
+    suspend fun queryBestMatchingPosition(
+        bssids: List<String>,
+        signalStrengths: List<Int>
+    ): List<Pair<Int, String>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = supabase.postgrest.rpc(
+                    function = "match_position_from_wifi",
+                    parameters = mapOf(
+                        "bssids" to bssids,
+                        "signals" to signalStrengths
+                    )
+                )
+
+                response.decodeList<JsonObject>().map { row ->
+                    // Safely extract positionId
+                    val positionIdElement = row["position_id"]
+                    val positionId = if (positionIdElement != null && positionIdElement.jsonPrimitive.intOrNull != null) {
+                        positionIdElement.jsonPrimitive.intOrNull
+                    } else {
+                        null
+                    }
+
+                    // Safely extract name
+                    val nameElement = row["name"]
+                    val name = if (nameElement != null && nameElement.jsonPrimitive.isString) {
+                        nameElement.jsonPrimitive.content
+                    } else {
+                        null
+                    }
+
+                    if (positionId != null && name != null) {
+                        Pair(positionId, name)
+                    } else {
+                        null
+                    }
+                }.filterNotNull()
+            } catch (e: Exception) {
+                Log.e("Supabase", "Error querying matched position: ${e.localizedMessage}", e)
+                emptyList()
+            } as List<Pair<Int, String>>
+        }
+    }
+
+
+
 }

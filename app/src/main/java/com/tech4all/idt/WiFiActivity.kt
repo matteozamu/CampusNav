@@ -25,6 +25,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -188,20 +190,36 @@ class WiFiActivity : AppCompatActivity() {
         val sortedResults = results.sortedByDescending { it.level }
 
         val sb = StringBuilder()
+        val bssids = mutableListOf<String>()
+        val signalStrengths = mutableListOf<Int>()
+
         // Display top 5 strongest networks
         for (result in sortedResults.take(5)) {
             sb.append(result.SSID)
                 .append(" - BSSID: ").append(result.BSSID)
                 .append(" - Signal Strength: ").append(result.level).append(" dBm\n")
+
+            // Add BSSIDs and signal strengths to the respective lists
+            bssids.add(result.BSSID)
+            signalStrengths.add(result.level)
         }
 
         textView.text = sb.toString()  // Show results on UI
+
+        // Call queryBestMatchingPosition with the extracted BSSIDs and signal strengths
+        CoroutineScope(Dispatchers.Main).launch {
+            val matches = SupabaseHelper.queryBestMatchingPosition(bssids, signalStrengths)
+            matches.forEach { (id, name) ->
+                Log.d("Match", "Position ID: $id, Label: $name")
+            }
+        }
 
         // Optionally speak the results
         if (isSpeechEnabled) {
             textToSpeech.speak(sb.toString(), TextToSpeech.QUEUE_FLUSH, null, null)
         }
     }
+
 
     /**
      * saveScanResults saves the top 5 Wi-Fi scan results to a database.
