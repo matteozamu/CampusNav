@@ -1,4 +1,4 @@
-package com.tech4all.idt.wifi
+package com.tech4all.idt
 
 import android.Manifest
 import android.content.BroadcastReceiver
@@ -24,8 +24,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.tech4all.idt.R
-import com.tech4all.idt.SupabaseHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,7 +32,7 @@ import java.util.Locale
 /**
  * WiFiActivity handles Wi-Fi scanning, voice feedback, and saving scan results to a database.
  */
-class WiFiScanActivity : AppCompatActivity() {
+class WiFiActivity : AppCompatActivity() {
 
     // Define UI elements
     private lateinit var wifiManager: WifiManager
@@ -54,7 +52,7 @@ class WiFiScanActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wifi_scan)
+        setContentView(R.layout.activity_wifi)
 
         // Set up the action bar with a back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true);

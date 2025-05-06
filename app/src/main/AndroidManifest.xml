@@ -52,11 +52,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".wifi.WiFiMainActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".wifi.WiFiScanActivity"
+            android:name=".WiFiActivity"
             android:exported="false" />
 
     </application>

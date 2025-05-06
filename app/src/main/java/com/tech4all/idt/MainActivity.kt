@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.tech4all.idt.gemma3.GemmaActivity
-import com.tech4all.idt.wifi.WiFiMainActivity
 import com.tech4all.idt.yolov8tflite.CameraActivity
 
 
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         // Gemma Button Click Listener
         wifiButton.setOnClickListener {
-            val intent = Intent(this, WiFiMainActivity::class.java)
+            val intent = Intent(this, WiFiActivity::class.java)
             startActivity(intent)
         }
     }
