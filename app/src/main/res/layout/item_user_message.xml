@@ -10,7 +10,7 @@
         android:id="@+id/textUserMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/user_message_bg"
+        android:background="@drawable/ic_user_message_bg"
         android:textColor="#FFFFFF"
         android:padding="12dp"
         android:textSize="16sp"

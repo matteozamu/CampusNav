@@ -35,7 +35,7 @@ class CreateEventActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.event_creation) // Setting the content view to the event creation layout
+        setContentView(R.layout.activity_event_creation) // Setting the content view to the event creation layout
 
         // Set up the action bar with a back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true);

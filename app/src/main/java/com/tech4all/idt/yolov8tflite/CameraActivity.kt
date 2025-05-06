@@ -56,7 +56,7 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.camera_activity)
+        setContentView(R.layout.activity_yolo)
 
         // Link UI elements
         inferenceTime = findViewById(R.id.inferenceTime)
