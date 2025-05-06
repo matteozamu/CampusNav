@@ -28,7 +28,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
-import android.net.wifi.ScanResult
 
 /**
  * WiFiActivity handles Wi-Fi scanning, voice feedback, and saving scan results to a database.
@@ -57,7 +56,7 @@ class WiFiActivity : AppCompatActivity() {
         setContentView(R.layout.activity_wifi)
 
         // Set up the action bar with a back button
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         onBackPressedDispatcher.addCallback(this) {
             finish()
         }
@@ -162,6 +161,8 @@ class WiFiActivity : AppCompatActivity() {
         val success = wifiManager.startScan()
         if (!success) {
             textView.text = "Scan failed"  // Handle scan failure
+        } else {
+            textView.text = "Scan successful"  // Clear previous results
         }
     }
 
