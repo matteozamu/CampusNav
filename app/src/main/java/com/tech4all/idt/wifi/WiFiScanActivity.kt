@@ -1,4 +1,4 @@
-package com.tech4all.idt
+package com.tech4all.idt.wifi
 
 import android.Manifest
 import android.content.BroadcastReceiver
@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -25,6 +24,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.tech4all.idt.R
+import com.tech4all.idt.SupabaseHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +34,7 @@ import java.util.Locale
 /**
  * WiFiActivity handles Wi-Fi scanning, voice feedback, and saving scan results to a database.
  */
-class WiFiActivity : AppCompatActivity() {
+class WiFiScanActivity : AppCompatActivity() {
 
     // Define UI elements
     private lateinit var wifiManager: WifiManager
@@ -53,7 +54,7 @@ class WiFiActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wifi)
+        setContentView(R.layout.activity_wifi_scan)
 
         // Set up the action bar with a back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
@@ -239,7 +240,12 @@ class WiFiActivity : AppCompatActivity() {
             // Log and save top 5 results
             for (result in sortedResults.take(5)) {
                 Log.d("SaveScanResults", "BSSID: ${result.BSSID}, Signal Strength: ${result.level}")
-                SupabaseHelper.insertWifiScan(positionId, result.SSID, result.BSSID, result.level)  // Insert data to database
+                SupabaseHelper.insertWifiScan(
+                    positionId,
+                    result.SSID,
+                    result.BSSID,
+                    result.level
+                )  // Insert data to database
             }
 
             Toast.makeText(applicationContext, "Data saved!", Toast.LENGTH_SHORT).show()  // Show success message
