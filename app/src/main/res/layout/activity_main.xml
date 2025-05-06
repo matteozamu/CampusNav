@@ -10,7 +10,7 @@
         android:layout_width="363dp"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="120dp"
         android:text="WiFi Localization"
         android:textSize="20sp" />
 
