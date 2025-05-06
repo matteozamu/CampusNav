@@ -205,7 +205,14 @@ class WiFiActivity : AppCompatActivity() {
             signalStrengths.add(result.level)
         }
 
+        /*
         textView.text = sb.toString()  // Show results on UI
+        // Optionally speak the results
+        if (isSpeechEnabled) {
+            textToSpeech.speak(sb.toString(), TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+        */
+
 
         // Call queryBestMatchingPosition with the extracted BSSIDs and signal strengths
         CoroutineScope(Dispatchers.Main).launch {
@@ -219,12 +226,6 @@ class WiFiActivity : AppCompatActivity() {
             }
 
             matchResultsTextView.text = resultText
-        }
-
-
-        // Optionally speak the results
-        if (isSpeechEnabled) {
-            textToSpeech.speak(sb.toString(), TextToSpeech.QUEUE_FLUSH, null, null)
         }
     }
 
