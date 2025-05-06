@@ -33,6 +33,8 @@ import android.net.wifi.ScanResult
 import android.location.LocationManager
 import android.os.SystemClock
 import android.provider.Settings
+import android.view.View
+import android.widget.ProgressBar
 
 
 /**
@@ -55,6 +57,8 @@ class WiFiActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
     private var lastScanTime = 0L
     private var isReceiverRegistered = false
+    private lateinit var loadingProgressBar: ProgressBar
+
 
     /**
      * onCreate initializes the activity, sets up listeners, and checks permissions.
@@ -81,6 +85,8 @@ class WiFiActivity : AppCompatActivity() {
         saveButton = findViewById(R.id.saveButton)
         positionIdEditText = findViewById(R.id.positionId)
         matchResultsTextView = findViewById(R.id.matchResultsTextView)
+        loadingProgressBar = findViewById(R.id.loadingProgressBar)
+
 
         // Initialize WifiManager and Location client
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -170,6 +176,7 @@ class WiFiActivity : AppCompatActivity() {
      * scanWifi starts a Wi-Fi scan and registers a receiver to get the scan results.
      */
     private fun scanWifi() {
+        loadingProgressBar.visibility = View.VISIBLE
         val now = SystemClock.elapsedRealtime()
 
         if (!wifiManager.isWifiEnabled) {
@@ -195,7 +202,10 @@ class WiFiActivity : AppCompatActivity() {
         if (!success) {
             textView.text = "Scan failed"
             Log.e("WiFiScan", "startScan() failed")
+        } else {
+            textView.text = "Scan successful"  // Clear previous results
         }
+        loadingProgressBar.visibility = View.GONE
     }
 
     private fun isLocationServiceEnabled(): Boolean {
@@ -257,18 +267,27 @@ class WiFiActivity : AppCompatActivity() {
 
         // Call queryBestMatchingPosition with the extracted BSSIDs and signal strengths
         CoroutineScope(Dispatchers.Main).launch {
-            Log.d("queryBestMatchingPosition called", bssids.toString())
-            val matches = SupabaseHelper.queryBestMatchingPosition(bssids, signalStrengths)
-            val resultText = if (matches.isNotEmpty()) {
-                "You are near room: " + matches.joinToString(separator = "\n") { (id, name) ->
-                    "$id | $name"
+            loadingProgressBar.visibility = View.VISIBLE // show loader
+            try {
+                Log.d("queryBestMatchingPosition called", bssids.toString())
+                val matches = SupabaseHelper.queryBestMatchingPosition(bssids, signalStrengths)
+                val resultText = if (matches.isNotEmpty()) {
+                    "You are near room: " + matches.joinToString(separator = "\n") { (id, name) ->
+                        "$id | $name"
+                    }
+                } else {
+                    "No position founded."
                 }
-            } else {
-                "No position founded."
-            }
 
-            matchResultsTextView.text = resultText
+                matchResultsTextView.text = resultText
+            } catch (e: Exception) {
+                Log.e("WiFiActivity", "Error during query: ${e.message}", e)
+                matchResultsTextView.text = "Error retrieving position."
+            } finally {
+                loadingProgressBar.visibility = View.GONE // hide loader
+            }
         }
+
     }
 
 
