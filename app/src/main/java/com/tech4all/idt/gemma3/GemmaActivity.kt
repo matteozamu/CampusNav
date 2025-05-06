@@ -235,9 +235,11 @@ class GemmaActivity : AppCompatActivity() {
                     .post(requestBody)
                     .build()
 
+                loadingSpinner.visibility = View.VISIBLE
                 client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         runOnUiThread {
+                            loadingSpinner.visibility = View.GONE
                             Toast.makeText(this@GemmaActivity, "Upload failed: ${e.message}", Toast.LENGTH_LONG).show()
                         }
                         Log.e("UPLOAD", "Upload error: ", e)
@@ -247,9 +249,9 @@ class GemmaActivity : AppCompatActivity() {
                     override fun onResponse(call: Call, response: Response) {
                         val responseBody = response.body?.string()
                         runOnUiThread {
+                            loadingSpinner.visibility = View.GONE
                             if (response.isSuccessful) {
                                 addMessageToChat("I uploaded a video, please write a summary", isUser = true)
-
                                 addMessageToChat(responseBody ?: "No summary received.", isUser = false)
                             } else {
                                 addMessageToChat("Upload failed: ${response.message}", isUser = false)
