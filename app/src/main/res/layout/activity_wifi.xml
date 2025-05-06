@@ -31,7 +31,7 @@
     <EditText
         android:id="@+id/positionId"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:autofillHints=""
         android:ems="10"
         android:inputType="number"
@@ -48,7 +48,7 @@
     <TextView
         android:id="@+id/matchResultsTextView"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="343dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/ic_bot_message_bg"
         android:text="Press scan wifi to get your location"
