@@ -4,8 +4,9 @@ import android.util.Log
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.*
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
+
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -49,16 +50,14 @@ data class Event(
 
 @Serializable
 data class MatchedPosition(
-    @SerialName("position_id") val positionId: Int,
-    @SerialName("name") val name: String
+    val position_id: Int,
+    val name: String
 )
 
 object SupabaseHelper {
     // Assume you have your Supabase URL and API key defined as constants or retrieved from configuration
     private const val SUPABASE_URL = "https://vrykwubmpmlwobfjcurg.supabase.co"
     private const val SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyeWt3dWJtcG1sd29iZmpjdXJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MjI1NjksImV4cCI6MjA1OTA5ODU2OX0.4ywLkxN1Br0LqpXz1Tum-LtXdc2D0SukEYTI5J9dnuM"
-
-    private val ktorClient = HttpClient(Android)
 
     // Initialize Supabase client
     private val supabase: SupabaseClient = createSupabaseClient(
@@ -162,17 +161,21 @@ object SupabaseHelper {
                 val response = supabase.postgrest.rpc(
                     function = "match_position_from_wifi",
                     parameters = mapOf(
-                        "bssids" to bssids,
-                        "signals" to signalStrengths
+                        "bssids" to Json.encodeToJsonElement(bssids),
+                        "signals" to Json.encodeToJsonElement(signalStrengths)
                     )
                 )
+                Log.d("Supabase", "RPC response: $response")
+
 
                 // Decode the response directly into a list of MatchedPosition
                 val matchedPositions = response.decodeList<MatchedPosition>()
+                Log.d("Supabase", "Raw JSON: ${response.data}")
+
 
                 // Map the data class objects to the desired Pair format
                 matchedPositions.map { matchedPosition ->
-                    Pair(matchedPosition.positionId, matchedPosition.name)
+                    Pair(matchedPosition.position_id, matchedPosition.name)
                 }
 
             } catch (e: Exception) {

@@ -30,6 +30,11 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import android.net.wifi.ScanResult
 
+import android.location.LocationManager
+import android.os.SystemClock
+import android.provider.Settings
+
+
 /**
  * WiFiActivity handles Wi-Fi scanning, voice feedback, and saving scan results to a database.
  */
@@ -48,11 +53,18 @@ class WiFiActivity : AppCompatActivity() {
     private lateinit var matchResultsTextView: TextView
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
+    private var lastScanTime = 0L
+    private var isReceiverRegistered = false
 
     /**
      * onCreate initializes the activity, sets up listeners, and checks permissions.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (!isReceiverRegistered) {
+            registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+            isReceiverRegistered = true
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wifi)
 
@@ -158,12 +170,40 @@ class WiFiActivity : AppCompatActivity() {
      * scanWifi starts a Wi-Fi scan and registers a receiver to get the scan results.
      */
     private fun scanWifi() {
-        registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+        val now = SystemClock.elapsedRealtime()
+
+        if (!wifiManager.isWifiEnabled) {
+            Toast.makeText(this, "Please enable Wi-Fi", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (!isLocationServiceEnabled()) {
+            Toast.makeText(this, "Please enable Location (GPS)", Toast.LENGTH_LONG).show()
+            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            startActivity(intent)
+            return
+        }
+
+        if (now - lastScanTime < 30000) {
+            Toast.makeText(this, "Please wait before scanning again", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val success = wifiManager.startScan()
+        lastScanTime = now
+
         if (!success) {
-            textView.text = "Scan failed"  // Handle scan failure
+            textView.text = "Scan failed"
+            Log.e("WiFiScan", "startScan() failed")
         }
     }
+
+    private fun isLocationServiceEnabled(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
 
     /**
      * wifiScanReceiver handles broadcasted scan results once the Wi-Fi scan is complete.
@@ -206,8 +246,8 @@ class WiFiActivity : AppCompatActivity() {
             signalStrengths.add(result.level)
         }
 
+        textView.text = sb.toString()   // Show results on UI
         /*
-        textView.text = sb.toString()  // Show results on UI
         // Optionally speak the results
         if (isSpeechEnabled) {
             textToSpeech.speak(sb.toString(), TextToSpeech.QUEUE_FLUSH, null, null)
@@ -217,10 +257,11 @@ class WiFiActivity : AppCompatActivity() {
 
         // Call queryBestMatchingPosition with the extracted BSSIDs and signal strengths
         CoroutineScope(Dispatchers.Main).launch {
+            Log.d("queryBestMatchingPosition called", bssids.toString())
             val matches = SupabaseHelper.queryBestMatchingPosition(bssids, signalStrengths)
             val resultText = if (matches.isNotEmpty()) {
                 "You are near room: " + matches.joinToString(separator = "\n") { (id, name) ->
-                    "• ID: $id | Number: $name"
+                    "$id | $name"
                 }
             } else {
                 "No position founded."
@@ -266,10 +307,18 @@ class WiFiActivity : AppCompatActivity() {
      */
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(wifiScanReceiver)  // Unregister Wi-Fi receiver
-        textToSpeech.stop()  // Stop speech synthesis
-        textToSpeech.shutdown()  // Release resources
+        if (isReceiverRegistered) {
+            try {
+                unregisterReceiver(wifiScanReceiver)
+                isReceiverRegistered = false
+            } catch (e: IllegalArgumentException) {
+                Log.w("WiFiScan", "Receiver already unregistered")
+            }
+        }
+        textToSpeech.stop()
+        textToSpeech.shutdown()
     }
+
 
     /**
      * Handle the back button press in the action bar.
