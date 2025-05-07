@@ -43,18 +43,36 @@
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"/>
 
-    <TextView
-        android:id="@+id/matchResultsTextView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
         android:layout_marginTop="40dp"
         android:background="@drawable/ic_bot_message_bg"
-        android:text="Press scan wifi to get your location"
-        android:textAlignment="center"
-        android:textColor="@color/purple_500"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_weight="1"/>
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/matchResultsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Press scan wifi to get your location"
+            android:textAlignment="center"
+            android:textColor="@color/purple_500"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="16dp" />
+
+        <ImageView
+            android:id="@+id/locationImage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/map_poli" />
+    </LinearLayout>
+
 
     <ProgressBar
         android:id="@+id/loadingProgressBar"
