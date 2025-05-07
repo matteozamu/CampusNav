@@ -101,7 +101,7 @@ class WiFiActivity : AppCompatActivity() {
 
         // Set up button listeners
         scanButton.setOnClickListener {
-            textView.text = ""  // Clear previous results
+            textView.text = "Indoor positioning system"  // Clear previous results
             scanWifi()
         }
 

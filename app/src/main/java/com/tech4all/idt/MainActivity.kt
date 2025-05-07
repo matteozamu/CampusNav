@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.tech4all.idt.gemma3.GemmaActivity
+import com.tech4all.idt.poliBuddy.CreateEventActivity
+import com.tech4all.idt.poliBuddy.PoliBuddyActivity
 import com.tech4all.idt.yolov8tflite.CameraActivity
 
 
@@ -27,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         // New Event Button Click Listener
         newEventButton.setOnClickListener {
-            val intent = Intent(this, CreateEventActivity::class.java)
+            val intent = Intent(this, PoliBuddyActivity::class.java)
             startActivity(intent)
         }
 

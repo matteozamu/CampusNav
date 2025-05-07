@@ -1,9 +1,12 @@
 package com.tech4all.idt
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.*
+import io.github.jan.supabase.postgrest.query.Order
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 
@@ -53,6 +56,8 @@ data class MatchedPosition(
     val position_id: Int,
     val name: String
 )
+
+
 
 object SupabaseHelper {
     // Assume you have your Supabase URL and API key defined as constants or retrieved from configuration
@@ -184,6 +189,37 @@ object SupabaseHelper {
             }
         }
     }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun getUpcomingEvents(): List<Event> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val currentDate = java.time.LocalDate.now().toString() // formato: "2025-05-07"
+                val currentTime = java.time.LocalTime.now().toString().substring(0, 5) // formato: "HH:mm"
+
+                val response = supabase.postgrest["events"].select {
+                    filter {
+                        or {
+                            gt("date", currentDate)
+                            and {
+                                eq("date", currentDate)
+                                gt("time", currentTime)
+                            }
+                        }
+                    }
+                    order("date", Order.ASCENDING)
+                    order("time", Order.ASCENDING)
+                }
+
+                response.decodeList<Event>()
+            } catch (e: Exception) {
+                Log.e("Supabase", "Error fetching upcoming events: ${e.message}")
+                emptyList()
+            }
+        }
+    }
+
 
 
 
