@@ -29,7 +29,7 @@
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="Start Gemma"
+        android:text="Talk with Gemma"
         android:textSize="20sp" />
 
     <Button
