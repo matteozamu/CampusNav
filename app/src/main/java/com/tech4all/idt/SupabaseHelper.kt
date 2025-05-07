@@ -57,9 +57,13 @@ data class MatchedPosition(
     val name: String
 )
 
+@Serializable
+data class EventJoin(
+    @SerialName("event_id") val eventId: Long,
+    @SerialName("username") val username: String
+)
 
-
-object SupabaseHelper {
+    object SupabaseHelper {
     // Assume you have your Supabase URL and API key defined as constants or retrieved from configuration
     private const val SUPABASE_URL = "https://vrykwubmpmlwobfjcurg.supabase.co"
     private const val SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyeWt3dWJtcG1sd29iZmpjdXJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MjI1NjksImV4cCI6MjA1OTA5ODU2OX0.4ywLkxN1Br0LqpXz1Tum-LtXdc2D0SukEYTI5J9dnuM"
@@ -71,6 +75,21 @@ object SupabaseHelper {
     ) {
         install(Postgrest)
     }
+
+    suspend fun insertJoin(eventId: Long, username: String) {
+        withContext(Dispatchers.IO) {
+            try {
+                val join = EventJoin(eventId = eventId, username = username)
+                supabase.postgrest["event_participants"].insert(join)
+                Log.d("Supabase", "User joined event successfully")
+            } catch (e: Exception) {
+                Log.e("Supabase", "Error inserting event join: ${e.message}", e)
+                throw e
+            }
+        }
+    }
+
+
 
     suspend fun insertPosition(label: String, latitude: Double, longitude: Double): Long? {
         return withContext(Dispatchers.IO) {

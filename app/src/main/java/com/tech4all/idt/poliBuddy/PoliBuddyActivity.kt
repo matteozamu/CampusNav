@@ -53,7 +53,7 @@ class PoliBuddyActivity : AppCompatActivity () {
     private fun refreshEvents() {
         lifecycleScope.launch {
             val events = SupabaseHelper.getUpcomingEvents()
-            adapter = EventAdapter(events)
+            adapter = EventAdapter(events, this@PoliBuddyActivity)
             recyclerView.adapter = adapter
         }
     }

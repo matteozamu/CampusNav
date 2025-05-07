@@ -11,7 +11,7 @@
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="120dp"
-        android:text="WiFi Localization"
+        android:text="Campus Localization"
         android:textSize="20sp" />
 
     <Button
@@ -20,7 +20,7 @@
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="New Event"
+        android:text="PoliBuddy"
         android:textSize="20sp" />
 
     <Button
