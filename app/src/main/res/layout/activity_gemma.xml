@@ -7,51 +7,48 @@
     android:layout_height="match_parent"
     android:padding="8dp">
 
-    <HorizontalScrollView
-        android:id="@+id/buttonScrollView"
+    <!-- LinearLayout che contiene i 3 bottoni allineati orizzontalmente -->
+    <LinearLayout
+        android:id="@+id/buttonLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="102dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/buttonLayout"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/recordButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:text="Record a video"
+            android:textSize="12sp" />
 
-            <Button
-                android:id="@+id/recordButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" Record a video"
-                android:textSize="12sp" />
+        <Button
+            android:id="@+id/pickButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="Select a video"
+            android:textSize="12sp" />
 
-            <Button
-                android:id="@+id/pickButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Select a video"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/uploadButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Upload"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </HorizontalScrollView>
+        <Button
+            android:id="@+id/uploadButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="Upload"
+            android:textSize="12sp" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
@@ -65,7 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonScrollView"
+        app:layout_constraintTop_toBottomOf="@id/buttonLayout"
         app:layout_constraintVertical_bias="1.0"
         android:contentDescription="Chat interface"/>
 
@@ -99,14 +96,13 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- Spinner di caricamento -->
     <ProgressBar
         android:id="@+id/loadingSpinner"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:visibility="gone"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/buttonScrollView"
+        app:layout_constraintTop_toBottomOf="@id/buttonLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         style="?android:attr/progressBarStyleLarge" />
