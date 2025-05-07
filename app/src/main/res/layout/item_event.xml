@@ -53,6 +53,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="16dp"
         android:text="Join"
-        style="@style/CustomButtonStyle"/>
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
 </LinearLayout>
