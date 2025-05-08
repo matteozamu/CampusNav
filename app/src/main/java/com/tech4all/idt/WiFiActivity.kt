@@ -181,6 +181,7 @@ class WiFiActivity : AppCompatActivity() {
 
         if (!wifiManager.isWifiEnabled) {
             Toast.makeText(this, "Please enable Wi-Fi", Toast.LENGTH_SHORT).show()
+            loadingProgressBar.visibility = View.GONE
             return
         }
 
@@ -188,13 +189,17 @@ class WiFiActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enable Location (GPS)", Toast.LENGTH_LONG).show()
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivity(intent)
+            loadingProgressBar.visibility = View.GONE
             return
         }
 
         if (now - lastScanTime < 30000) {
             Toast.makeText(this, "Please wait before scanning again", Toast.LENGTH_SHORT).show()
+            loadingProgressBar.visibility = View.GONE
             return
         }
+
+        textView.text = "Scan in progress..." // Show progress text in the TextView
 
         val success = wifiManager.startScan()
         lastScanTime = now
@@ -202,11 +207,13 @@ class WiFiActivity : AppCompatActivity() {
         if (!success) {
             textView.text = "Scan failed"
             Log.e("WiFiScan", "startScan() failed")
+            loadingProgressBar.visibility = View.GONE
         } else {
-            textView.text = "Scan successful"  // Clear previous results
+            // Wait for results in the BroadcastReceiver
+            // textView will be updated there after scan completes
         }
-        loadingProgressBar.visibility = View.GONE
     }
+
 
     private fun isLocationServiceEnabled(): Boolean {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -256,6 +263,7 @@ class WiFiActivity : AppCompatActivity() {
             signalStrengths.add(result.level)
         }
 
+        textView.text = "Scan completed"
 //        textView.text = sb.toString()   // Show results on UI
         /*
         // Optionally speak the results
@@ -280,6 +288,16 @@ class WiFiActivity : AppCompatActivity() {
                 }
 
                 matchResultsTextView.text = resultText
+
+                if (isSpeechEnabled) {
+                    val spokenText = if (matches.isNotEmpty()) {
+                        "You are near room " + matches.joinToString(separator = ", ") { it.second }
+                    } else {
+                        "No position found"
+                    }
+                    textToSpeech.speak(spokenText, TextToSpeech.QUEUE_FLUSH, null, null)
+                }
+
             } catch (e: Exception) {
                 Log.e("WiFiActivity", "Error during query: ${e.message}", e)
                 matchResultsTextView.text = "Error retrieving position."
