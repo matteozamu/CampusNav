@@ -3,6 +3,7 @@ package com.tech4all.idt
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -14,10 +15,10 @@ import com.tech4all.idt.yolov8tflite.CameraActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var startCameraButton: Button // Nuovo bottone per avviare CameraActivity
-    private lateinit var gemmaButton: Button
-    private lateinit var newEventButton: Button
-    private lateinit var wifiButton: Button
+    private lateinit var startCameraButton: LinearLayout
+    private lateinit var gemmaButton: LinearLayout
+    private lateinit var newEventButton: LinearLayout
+    private lateinit var wifiButton: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
