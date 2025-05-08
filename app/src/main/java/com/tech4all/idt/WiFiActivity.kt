@@ -256,7 +256,7 @@ class WiFiActivity : AppCompatActivity() {
             signalStrengths.add(result.level)
         }
 
-        textView.text = sb.toString()   // Show results on UI
+//        textView.text = sb.toString()   // Show results on UI
         /*
         // Optionally speak the results
         if (isSpeechEnabled) {
