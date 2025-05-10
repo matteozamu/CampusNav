@@ -12,6 +12,7 @@ import android.util.Size
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -51,12 +52,19 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
     private lateinit var overlay: OverlayView
     private lateinit var viewFinder: PreviewView
     private lateinit var backButton: ImageButton
+    private lateinit var filterButton: ImageButton
+    private val availableCategories = listOf("Stair", "door", "exit sign", "men restroom", "women restroom")
+    private val selectedCategories = mutableSetOf<String>().apply {
+        addAll(availableCategories.map { it.replace(" ", "_") })
+    }
+
 
 
     // Object tracking for text-to-speech
     private val trackedObjects: MutableMap<String, Int> = mutableMapOf()
     private val absenceThreshold = 3 // max frames without object detection
     private lateinit var tts: TextToSpeech
+
 
     /**
      * Called when the activity is created. Initializes UI, detector,
@@ -71,6 +79,7 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
         overlay = findViewById(R.id.overlay)
         viewFinder = findViewById(R.id.view_finder)
         backButton = findViewById(R.id.backButton)
+        filterButton = findViewById(R.id.filterButton)
 
         // Initialize text-to-speech
         tts = TextToSpeech(this) { status ->
@@ -87,6 +96,9 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
         // Initialize and prepare the YOLO detector
         detector = Detector(baseContext, Constants.MODEL_PATH, Constants.LABELS_PATH, this)
         detector.setup()
+        filterButton.setOnClickListener {
+            showFilterDialog()
+        }
 
         // Start camera if permissions are already granted
         if (allPermissionsGranted()) {
@@ -311,6 +323,33 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
         if (this::tts.isInitialized) {
             tts.speak(objectName, TextToSpeech.QUEUE_FLUSH, null, null)
         }
+    }
+
+    private fun showFilterDialog() {
+        val checkedItems = availableCategories.map { selectedCategories.contains(it) }.toBooleanArray()
+
+        AlertDialog.Builder(this)
+            .setTitle("Select categories")
+            .setMultiChoiceItems(availableCategories.toTypedArray(), checkedItems) { _, which, isChecked ->
+                val category = availableCategories[which]
+                if (isChecked) {
+                    selectedCategories.add(category)
+                } else {
+                    selectedCategories.remove(category)
+                }
+            }
+            .setPositiveButton("OK") { dialog, _ ->
+                val normalizedCategories = selectedCategories.map { category ->
+                    category.replace(" ", "_")
+                }.toSet()
+                detector.updateSelectedCategories(normalizedCategories)
+                dialog.dismiss()
+            }
+
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
 }

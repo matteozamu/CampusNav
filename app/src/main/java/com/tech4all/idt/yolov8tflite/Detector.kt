@@ -46,6 +46,8 @@ class Detector(
         .add(CastOp(INPUT_IMAGE_TYPE))
         .build()
 
+    private var selectedCategories = setOf<String>()
+
     /**
      * Loads the TFLite model, reads label file, and extracts input/output shapes.
      */
@@ -132,6 +134,10 @@ class Detector(
     /**
      * Parses raw output tensor and returns top bounding boxes above confidence threshold.
      */
+    /**
+     * Parses raw output tensor and returns top bounding boxes above confidence threshold,
+     * filtered by user-selected categories.
+     */
     private fun bestBox(array: FloatArray): List<BoundingBox>? {
         val boundingBoxes = mutableListOf<BoundingBox>()
 
@@ -141,7 +147,7 @@ class Detector(
             var j = 4
             var arrayIdx = c + numElements * j
 
-            // Find class with maximum confidence
+            // Find the class with the highest confidence score
             while (j < numChannel) {
                 if (array[arrayIdx] > maxConf) {
                     maxConf = array[arrayIdx]
@@ -151,21 +157,29 @@ class Detector(
                 arrayIdx += numElements
             }
 
-            // Only keep boxes above threshold
+            // Filter out low-confidence detections
             if (maxConf > CONFIDENCE_THRESHOLD) {
                 val clsName = labels[maxIdx]
+
+                // ❗ Filter out classes not selected by the user
+                if (!selectedCategories.contains(clsName)) continue
+
+                // Extract center and size of the bounding box
                 val cx = array[c]
                 val cy = array[c + numElements]
                 val w = array[c + numElements * 2]
                 val h = array[c + numElements * 3]
+
+                // Convert center coordinates to box corners
                 val x1 = cx - (w / 2F)
                 val y1 = cy - (h / 2F)
                 val x2 = cx + (w / 2F)
                 val y2 = cy + (h / 2F)
 
-                // Skip invalid boxes
+                // Ignore boxes with invalid coordinates
                 if (x1 !in 0F..1F || y1 !in 0F..1F || x2 !in 0F..1F || y2 !in 0F..1F) continue
 
+                // Add valid and selected bounding box to the list
                 boundingBoxes.add(
                     BoundingBox(
                         x1 = x1, y1 = y1, x2 = x2, y2 = y2,
@@ -179,6 +193,7 @@ class Detector(
         // Return boxes after applying Non-Maximum Suppression
         return if (boundingBoxes.isEmpty()) null else applyNMS(boundingBoxes)
     }
+
 
     /**
      * Applies Non-Maximum Suppression to remove overlapping boxes.
@@ -235,4 +250,10 @@ class Detector(
         private const val CONFIDENCE_THRESHOLD = 0.3F
         private const val IOU_THRESHOLD = 0.5F
     }
+
+    fun updateSelectedCategories(categories: Set<String>) {
+        selectedCategories = categories
+    }
+
+
 }

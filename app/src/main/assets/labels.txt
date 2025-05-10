@@ -1,4 +1,5 @@
-fork
-knife
-plate
-spoon
+Stair
+door
+exit_sign
+men_restroom
+women_restroom
