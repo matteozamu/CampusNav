@@ -274,47 +274,53 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
      */
     override fun onDetect(boundingBoxes: List<BoundingBox>, inferenceTime: Long) {
         runOnUiThread {
+            // Update inference time display
             this.inferenceTime.text = getString(R.string.inference_time, inferenceTime)
+
+            // Draw detection results on the overlay
             overlay.apply {
                 setResults(boundingBoxes)
                 invalidate()
             }
 
-            // Update tracked objects
-            val currentLabels = boundingBoxes
+            // Count the number of instances for each detected object label
+            val counts = boundingBoxes
                 .mapNotNull { it.clsName.trim().takeIf { name -> name.isNotEmpty() } }
-                .toSet()
+                .groupingBy { it }
+                .eachCount()
 
-            for (label in currentLabels) {
-                if (!trackedObjects.containsKey(label)) {
-                    trackedObjects[label] = 0
-                    pronounceObject(label)
+            val currentLabels = counts.keys
+
+            // For each detected object type, check if it's new or its count has changed
+            for ((label, count) in counts) {
+                val lastCount = trackedObjects[label]
+                if (lastCount == null || lastCount != count) {
+                    // New object type or count changed: update and announce
+                    trackedObjects[label] = count
+                    pronounceObject("$count $label")
                 } else {
-                    trackedObjects[label] = 0
+                    // Count unchanged: update anyway for consistency
+                    trackedObjects[label] = count
                 }
             }
 
-            // Check for absent objects
+            // Remove object types that are no longer detected
             val toRemove = mutableListOf<String>()
-            for ((label, count) in trackedObjects) {
+            for ((label, _) in trackedObjects) {
                 if (!currentLabels.contains(label)) {
-                    val newCount = count + 1
-                    if (newCount >= absenceThreshold) {
-                        toRemove.add(label)
-                    } else {
-                        trackedObjects[label] = newCount
-                    }
+                    toRemove.add(label)
                 }
             }
 
             for (label in toRemove) {
                 trackedObjects.remove(label)
-                Log.d("Tracker", "Oggetto rimosso: $label")
+                Log.d("Tracker", "Object removed: $label")
             }
 
-            Log.d("Tracker", "Oggetti attualmente tracciati: $trackedObjects")
+            Log.d("Tracker", "Currently tracked: $trackedObjects")
         }
     }
+
 
     /**
      * Pronounces an object name using Text-to-Speech.
