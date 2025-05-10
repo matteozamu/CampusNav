@@ -8,7 +8,6 @@ import android.graphics.Matrix
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import android.util.Size
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -62,7 +61,6 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
 
     // Object tracking for text-to-speech
     private val trackedObjects: MutableMap<String, Int> = mutableMapOf()
-    private val absenceThreshold = 3 // max frames without object detection
     private lateinit var tts: TextToSpeech
 
 
@@ -158,7 +156,6 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
 
         // Create image analysis use case to process each frame
         imageAnalyzer = ImageAnalysis.Builder()
-            .setTargetResolution(Size(1280, 960)) // Avoid deprecated setTargetAspectRatio
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .setTargetRotation(rotation)
             .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
