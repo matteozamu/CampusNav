@@ -1,4 +1,4 @@
-package com.tech4all.idt
+package com.tech4all.idt.wiFiLocalization
 
 import android.Manifest
 import android.content.BroadcastReceiver
@@ -24,23 +24,22 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
-import android.net.wifi.ScanResult
 
 import android.location.LocationManager
 import android.os.SystemClock
 import android.provider.Settings
 import android.view.View
 import android.widget.ProgressBar
+import com.tech4all.idt.R
+import com.tech4all.idt.SupabaseHelper
 
 
 /**
  * WiFiActivity handles Wi-Fi scanning, voice feedback, and saving scan results to a database.
  */
-class WiFiActivity : AppCompatActivity() {
+class NewPositionActivity : AppCompatActivity() {
 
     // Define UI elements
     private lateinit var wifiManager: WifiManager
@@ -52,7 +51,6 @@ class WiFiActivity : AppCompatActivity() {
     private lateinit var saveButton: Button
     private var isSpeechEnabled = true // Flag to toggle speech feedback
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var matchResultsTextView: TextView
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
     private var lastScanTime = 0L
@@ -70,7 +68,7 @@ class WiFiActivity : AppCompatActivity() {
         }
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wifi)
+        setContentView(R.layout.activity_new_position)
 
         // Set up the action bar with a back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
@@ -84,7 +82,6 @@ class WiFiActivity : AppCompatActivity() {
         speechToggleButton = findViewById(R.id.speechToggleButton)
         saveButton = findViewById(R.id.saveButton)
         positionIdEditText = findViewById(R.id.positionId)
-        matchResultsTextView = findViewById(R.id.matchResultsTextView)
         loadingProgressBar = findViewById(R.id.loadingProgressBar)
 
 
@@ -264,48 +261,6 @@ class WiFiActivity : AppCompatActivity() {
         }
 
         textView.text = "Scan completed"
-//        textView.text = sb.toString()   // Show results on UI
-        /*
-        // Optionally speak the results
-        if (isSpeechEnabled) {
-            textToSpeech.speak(sb.toString(), TextToSpeech.QUEUE_FLUSH, null, null)
-        }
-        */
-
-
-        // Call queryBestMatchingPosition with the extracted BSSIDs and signal strengths
-        CoroutineScope(Dispatchers.Main).launch {
-            loadingProgressBar.visibility = View.VISIBLE // show loader
-            try {
-                Log.d("queryBestMatchingPosition called", bssids.toString())
-                val matches = SupabaseHelper.queryBestMatchingPosition(bssids, signalStrengths)
-                val resultText = if (matches.isNotEmpty()) {
-                    "You are near room: " + matches.joinToString(separator = "\n") { (id, name) ->
-                        "$id | $name"
-                    }
-                } else {
-                    "No position founded."
-                }
-
-                matchResultsTextView.text = resultText
-
-                if (isSpeechEnabled) {
-                    val spokenText = if (matches.isNotEmpty()) {
-                        "You are near room " + matches.joinToString(separator = ", ") { it.second }
-                    } else {
-                        "No position found"
-                    }
-                    textToSpeech.speak(spokenText, TextToSpeech.QUEUE_FLUSH, null, null)
-                }
-
-            } catch (e: Exception) {
-                Log.e("WiFiActivity", "Error during query: ${e.message}", e)
-                matchResultsTextView.text = "Error retrieving position."
-            } finally {
-                loadingProgressBar.visibility = View.GONE // hide loader
-            }
-        }
-
     }
 
 

@@ -2,13 +2,12 @@ package com.tech4all.idt
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.tech4all.idt.wiFiLocalization.WiFiActivityMain
 import com.tech4all.idt.gemma3.GemmaActivity
-import com.tech4all.idt.poliBuddy.CreateEventActivity
 import com.tech4all.idt.poliBuddy.PoliBuddyActivity
 import com.tech4all.idt.yolov8tflite.CameraActivity
 
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         // Gemma Button Click Listener
         wifiButton.setOnClickListener {
-            val intent = Intent(this, WiFiActivity::class.java)
+            val intent = Intent(this, WiFiActivityMain::class.java)
             startActivity(intent)
         }
     }

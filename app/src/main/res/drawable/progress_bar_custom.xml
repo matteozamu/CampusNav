@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/darker_gray" /> <!-- Sfondo del ProgressBar -->
+    <item>
+        <clip android:gravity="left">
+            <shape>
+                <solid android:color="#007BFF" /> <!-- Colore del progresso -->
+                <corners android:radius="4dp" /> <!-- Angoli arrotondati -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>

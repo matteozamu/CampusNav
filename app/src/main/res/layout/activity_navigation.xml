@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF"
+    android:layout_marginTop="92dp">
+
+    <!-- Indicazione -->
+    <TextView
+        android:id="@+id/indicationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Indication:"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Freccia sinistra -->
+    <ImageView
+        android:id="@+id/directionArrow"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_arrow_left"
+        android:contentDescription="Arrow indicating direction" />
+
+    <!-- Testo sotto la freccia -->
+    <TextView
+        android:id="@+id/step_instruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go left for 30 steps"
+        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Stato (con sfondo blu chiaro) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#ADD8E6"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: 18 steps left"
+            android:textSize="16sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/progress_steps"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:progress="12"
+            android:max="30"
+            android:progressDrawable="@drawable/progress_bar_custom" />
+    </LinearLayout>
+
+    <!-- Pulsante End Navigation -->
+    <Button
+        android:id="@+id/end_navigation_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_gravity="center_horizontal"
+        android:text="End Navigation"
+        android:backgroundTint="#007BFF"
+        android:textColor="#FFFFFF"
+        android:padding="12dp"
+        android:background="@drawable/ic_user_message_bg" />
+
+    <!-- Pulsante Camera -->
+    <Button
+        android:id="@+id/camera_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Camera"
+        android:backgroundTint="#007BFF"
+        android:textColor="#FFFFFF"
+        android:padding="12dp"
+        android:background="@drawable/ic_user_message_bg" />
+
+</LinearLayout>

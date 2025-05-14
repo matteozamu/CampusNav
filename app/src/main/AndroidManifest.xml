@@ -52,12 +52,21 @@
             android:exported="false" />
 
         <activity
-            android:name=".WiFiActivity"
+            android:name=".wiFiLocalization.WiFiActivityMain"
+            android:exported="false" />
+
+        <activity
+            android:name=".wiFiLocalization.NewPositionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".wiFiLocalization.NavigationActivity"
             android:exported="false" />
 
         <activity
             android:name=".poliBuddy.PoliBuddyActivity"
             android:exported="false" />
+
 
     </application>
 
