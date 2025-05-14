@@ -1,4 +1,4 @@
-package com.tech4all.idt.wiFiLocalization
+package com.tech4all.idt.wifiLocalization
 
 import android.Manifest
 import android.content.BroadcastReceiver

@@ -6,16 +6,36 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Bottone per creare un nuovo evento, con margine top per partire sotto la ActionBar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="92dp">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@color/purple_500"
+            app:tabSelectedTextColor="@color/purple_200"
+            app:tabTextColor="@color/black" />
+
+        <FrameLayout
+            android:id="@+id/dynamicContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+
+
+    <!-- Button e lista eventi esistente -->
     <Button
         android:id="@+id/createNewEventButton"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="102dp"
+        android:layout_marginTop="16dp"
         android:text="Create new event"
         android:textSize="20sp" />
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -32,7 +52,6 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/refreshButton"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,7 +61,6 @@
             android:id="@+id/refreshButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:background="@drawable/ic_rounded_button"
             android:contentDescription="Refresh"
             app:srcCompat="@android:drawable/ic_popup_sync"

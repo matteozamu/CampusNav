@@ -1,4 +1,4 @@
-package com.tech4all.idt.wiFiLocalization
+package com.tech4all.idt.wifiLocalization
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,6 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.tech4all.idt.MainActivity
 import com.tech4all.idt.R
-import com.tech4all.idt.gemma3.GemmaActivity
 import com.tech4all.idt.yolov8tflite.CameraActivity
 
 class NavigationActivity : AppCompatActivity() {

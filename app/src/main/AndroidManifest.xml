@@ -52,15 +52,15 @@
             android:exported="false" />
 
         <activity
-            android:name=".wiFiLocalization.WiFiActivityMain"
+            android:name=".wifiLocalization.WiFiActivityMain"
             android:exported="false" />
 
         <activity
-            android:name=".wiFiLocalization.NewPositionActivity"
+            android:name=".wifiLocalization.NewPositionActivity"
             android:exported="false" />
 
         <activity
-            android:name=".wiFiLocalization.NavigationActivity"
+            android:name=".wifiLocalization.NavigationActivity"
             android:exported="false" />
 
         <activity
