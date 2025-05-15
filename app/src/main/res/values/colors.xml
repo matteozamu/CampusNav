@@ -9,5 +9,27 @@
     <color name="white">#FFFFFFFF</color>
     <color name="bounding_box_color">#234567</color>
     <color name="darkRed">#CC0000</color>
-    <color name="button_back_color">#3F51B5</color>
+<!--    <color name="button_back_color">#3F51B5</color>-->
+    <!-- Base palette -->
+    <color name="primary">#005A9C</color> <!-- Dark blue (great contrast) -->
+    <color name="primary_variant">#003B6F</color>
+    <color name="on_primary">#FFFFFF</color>
+
+    <color name="secondary">#FFB400</color> <!-- Amber: great for accents -->
+    <color name="secondary_variant">#CC9200</color>
+    <color name="on_secondary">#000000</color>
+
+    <color name="background">#FFFFFF</color>
+    <color name="on_background">#000000</color>
+
+    <color name="surface">#F5F5F5</color>
+    <color name="on_surface">#000000</color>
+
+    <color name="error">#B00020</color>
+    <color name="on_error">#FFFFFF</color>
+
+    <!-- Support colors -->
+    <color name="highlight">#FFD54F</color>
+    <color name="disabled">#BDBDBD</color>
+    <color name="button_back_color">#1976D2</color> <!-- Same as primary -->
 </resources>
