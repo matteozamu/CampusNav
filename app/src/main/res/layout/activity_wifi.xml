@@ -119,53 +119,69 @@
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp">
 
-        <!-- Label text -->
-        <TextView
-            android:id="@+id/presavedLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/presaved_places"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            style="@style/TextAppearance.Material3.LabelMedium" />
-
-        <!-- Button group aligned to bottom -->
         <LinearLayout
-            android:id="@+id/buttonContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="bottom|center_horizontal"
-            android:gravity="center"
-            android:contentDescription="@string/places_buttons_group"
-            android:layout_marginTop="40dp">
+            android:orientation="vertical">
 
+            <!-- Label text -->
+            <TextView
+                android:id="@+id/presavedLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/presaved_places"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                style="@style/TextAppearance.Material3.LabelMedium" />
+
+            <!-- + Add Button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLibrary"
+                android:id="@+id/addPresavedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/library"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_margin="8dp" />
+                android:text="+ Add"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCafe"
-                android:layout_width="wrap_content"
+            <!-- Button group aligned to bottom -->
+            <LinearLayout
+                android:id="@+id/buttonContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cafe"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_margin="8dp" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:contentDescription="@string/places_buttons_group"
+                android:layout_marginTop="16dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnTO1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/to1"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_margin="8dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLibrary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/library"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_margin="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCafe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cafe"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_margin="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTO1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/to1"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_margin="8dp" />
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
+
 
 
     <LinearLayout
