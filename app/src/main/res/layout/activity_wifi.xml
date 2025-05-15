@@ -188,8 +188,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/scan_wifi"
-            android:icon="@drawable/ic_wifi"
-            android:iconPadding="8dp"
+            android:icon="@drawable/ic_wifi_icon"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp" />
 
@@ -199,8 +198,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/add_position"
-            android:icon="@drawable/ic_add_location"
-            android:iconPadding="8dp"
+            android:icon="@drawable/ic_location_icon"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"/>
     </LinearLayout>
@@ -233,7 +231,7 @@
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/darker_gray"
             android:importantForAccessibility="yes"
-            android:contentDescription="@string/search_input"/>
+            android:contentDescription="Search input"/>
 
         <ImageButton
             android:id="@+id/micButton"

@@ -16,9 +16,9 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicatorColor="@color/purple_500"
-            app:tabSelectedTextColor="@color/purple_200"
-            app:tabTextColor="@color/black" />
+            app:tabIndicatorColor="@color/bounding_box_color"
+            app:tabSelectedTextColor="@color/bounding_box_color"
+            app:tabTextColor="@color/bounding_box_color" />
 
         <FrameLayout
             android:id="@+id/dynamicContainer"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_bot_message_bg"
             android:text="Available Events"
-            android:textColor="@color/purple_700"
+            android:textColor="@color/bounding_box_color"
             android:textSize="24sp"
             android:textStyle="bold"
             android:gravity="center"

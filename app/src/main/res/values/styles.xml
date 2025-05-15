@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.IDT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.IDT" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
         <item name="colorOnPrimary">@color/on_primary</item>

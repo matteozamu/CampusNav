@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="🔵 Mauro  - Building 13 - 100m"
-            android:background="@color/purple_700"
+            android:background="@color/primary"
             android:textColor="@android:color/white"
             android:padding="12dp"
             android:textSize="16sp" />
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="🔵 Giulio - Building 25 - 500m"
-            android:background="@color/purple_700"
+            android:background="@color/primary"
             android:textColor="@android:color/white"
             android:padding="12dp"
             android:textSize="16sp"
