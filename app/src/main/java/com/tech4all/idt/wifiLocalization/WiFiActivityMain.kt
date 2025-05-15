@@ -242,8 +242,8 @@ class WiFiActivityMain : AppCompatActivity() {
                 Log.d("queryBestMatchingPosition called", bssids.toString())
                 val matches = SupabaseHelper.queryBestMatchingPosition(bssids, signalStrengths)
                 val resultText = if (matches.isNotEmpty()) {
-                    "You are near room: " + matches.joinToString(separator = "\n") { (id, name) ->
-                        "$id | $name"
+                    "You are in room " + matches.joinToString(separator = "\n") { (id, name) ->
+                        "$name | Floor: $id"
                     }
                 } else {
                     "No position founded."
