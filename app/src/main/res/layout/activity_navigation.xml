@@ -1,92 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#FFFFFF"
-    android:layout_marginTop="92dp">
+    android:background="@color/primary_variant">
 
-    <!-- Indicazione -->
+    <!-- Titolo -->
     <TextView
-        android:id="@+id/indicationLabel"
+        android:id="@+id/navigation_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Indication:"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp" />
+        android:text="Navigation"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="92dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Freccia sinistra -->
+    <!-- Freccia + distanza -->
     <ImageView
-        android:id="@+id/directionArrow"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
+        android:id="@+id/direction_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_arrow_left"
-        android:contentDescription="Arrow indicating direction" />
+        android:contentDescription="Direction Arrow"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/navigation_title"
+        android:layout_marginStart="16dp"
+        app:tint="#FFFFFF" />
 
-    <!-- Testo sotto la freccia -->
     <TextView
-        android:id="@+id/step_instruction"
+        android:id="@+id/distance_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go left for 30 steps"
-        android:textSize="16sp"
-        android:layout_gravity="center_horizontal"
+        android:text="250 m"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/direction_icon"
+        app:layout_constraintTop_toBottomOf="@id/navigation_title" />
 
-    <!-- Stato (con sfondo blu chiaro) -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Istruzione -->
+    <TextView
+        android:id="@+id/instruction_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#ADD8E6"
-        android:padding="12dp">
+        android:text="Head towards the library"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/direction_icon" />
 
-        <TextView
-            android:id="@+id/status_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status: 18 steps left"
-            android:textSize="16sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp" />
+    <!-- Mappa -->
+    <ImageView
+        android:id="@+id/map_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/map_poli"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Map"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toBottomOf="@id/instruction_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:id="@+id/progress_steps"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:progress="12"
-            android:max="30"
-            android:progressDrawable="@drawable/progress_bar_custom" />
-    </LinearLayout>
+    <!-- Pulsante Audio -->
+    <ImageButton
+        android:id="@+id/audio_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:backgroundTint="#333333"
+        android:background="@drawable/rounded_chip"
+        android:padding="12dp"
+        android:src="@drawable/ic_speaker_icon"
+        android:contentDescription="Audio"
+        app:layout_constraintTop_toBottomOf="@id/map_image"
+        app:layout_constraintEnd_toStartOf="@id/settings_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        app:tint="#FFFFFF" />
 
-    <!-- Pulsante End Navigation -->
+    <!-- Pulsante Impostazioni -->
+    <ImageButton
+        android:id="@+id/settings_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:backgroundTint="#333333"
+        android:background="@drawable/rounded_chip"
+        android:padding="12dp"
+        android:src="@drawable/ic_settings_icon"
+        android:contentDescription="Settings"
+        app:layout_constraintTop_toBottomOf="@id/map_image"
+        app:layout_constraintStart_toEndOf="@id/audio_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:tint="#FFFFFF" />
+
+
+    <!-- Stato e progress bar -->
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status: 18 steps left"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/settings_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/progress_steps"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:progress="12"
+        android:max="30"
+        android:progressDrawable="@drawable/progress_bar_custom"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/status_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Bottoni -->
     <Button
         android:id="@+id/end_navigation_button"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_gravity="center_horizontal"
         android:text="End Navigation"
-        android:backgroundTint="#007BFF"
         android:textColor="#FFFFFF"
+        android:backgroundTint="#007BFF"
         android:padding="12dp"
-        android:background="@drawable/ic_user_message_bg" />
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toBottomOf="@id/progress_steps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/camera_button" />
 
-    <!-- Pulsante Camera -->
     <Button
         android:id="@+id/camera_button"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
         android:text="Camera"
-        android:backgroundTint="#007BFF"
         android:textColor="#FFFFFF"
+        android:backgroundTint="#007BFF"
         android:padding="12dp"
-        android:background="@drawable/ic_user_message_bg" />
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/progress_steps"
+        app:layout_constraintStart_toEndOf="@id/end_navigation_button"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
