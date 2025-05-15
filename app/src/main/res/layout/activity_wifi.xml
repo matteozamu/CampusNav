@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="92dp" />
+        app:layout_constraintGuide_begin="20dp" />
 
     <ImageView
         android:id="@+id/locationIcon"
@@ -26,14 +26,14 @@
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="25dp" />
 
     <TextView
         android:id="@+id/matchResultsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="N/A"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:accessibilityLiveRegion="polite"
         app:layout_constraintStart_toEndOf="@id/locationIcon"
         app:layout_constraintTop_toTopOf="@id/locationIcon"

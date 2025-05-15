@@ -259,13 +259,7 @@ class WiFiActivityMain : AppCompatActivity() {
                 }
 
                 matchResultsTextView.text = resultText
-
-                val spokenText = if (matches.isNotEmpty()) {
-                    "You are near room " + matches.joinToString(separator = ", ") { it.second }
-                } else {
-                    "No position found"
-                }
-                textToSpeech.speak(spokenText, TextToSpeech.QUEUE_FLUSH, null, null)
+                textToSpeech.speak(resultText, TextToSpeech.QUEUE_FLUSH, null, null)
 
             } catch (e: Exception) {
                 Log.e("WiFiActivity", "Error during query: ${e.message}", e)
