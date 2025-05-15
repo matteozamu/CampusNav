@@ -33,7 +33,7 @@
     <string name="library">Library</string>
     <string name="cafe">Café</string>
     <string name="to1">T.O.1</string>
-    <string name="scan_wifi">Scan WiFi</string>
+    <string name="scan_wifi">Update Location</string>
     <string name="add_position">Add New Position</string>
     <string name="search">Search</string>
     <string name="voice_input">Voice Input</string>

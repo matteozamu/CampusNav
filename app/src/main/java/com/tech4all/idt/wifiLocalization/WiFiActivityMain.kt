@@ -55,6 +55,7 @@ class WiFiActivityMain : AppCompatActivity() {
     private var lastScanTime = 0L
     private var isReceiverRegistered = false
     private lateinit var loadingProgressBar: ProgressBar
+    private var isScanning = false
 
 
     /**
@@ -110,6 +111,13 @@ class WiFiActivityMain : AppCompatActivity() {
 
         // Check for location permissions
         checkAndRequestLocationPermission()
+
+        lifecycleScope.launch {
+            while (true) {
+                scanWifi()
+                kotlinx.coroutines.delay(10_000) // delay for 10 seconds
+            }
+        }
     }
 
     /**
@@ -154,12 +162,16 @@ class WiFiActivityMain : AppCompatActivity() {
      * scanWifi starts a Wi-Fi scan and registers a receiver to get the scan results.
      */
     private fun scanWifi() {
+        if (isScanning) return
+        isScanning = true
         loadingProgressBar.visibility = View.VISIBLE
+
         val now = SystemClock.elapsedRealtime()
 
         if (!wifiManager.isWifiEnabled) {
             Toast.makeText(this, "Please enable Wi-Fi", Toast.LENGTH_SHORT).show()
             loadingProgressBar.visibility = View.GONE
+            isScanning = false
             return
         }
 
@@ -168,12 +180,7 @@ class WiFiActivityMain : AppCompatActivity() {
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivity(intent)
             loadingProgressBar.visibility = View.GONE
-            return
-        }
-
-        if (now - lastScanTime < 30000) {
-            Toast.makeText(this, "Please wait before scanning again", Toast.LENGTH_SHORT).show()
-            loadingProgressBar.visibility = View.GONE
+            isScanning = false
             return
         }
 
@@ -183,8 +190,10 @@ class WiFiActivityMain : AppCompatActivity() {
         if (!success) {
             Log.e("WiFiScan", "startScan() failed")
             loadingProgressBar.visibility = View.GONE
+            isScanning = false
         }
     }
+
 
 
     private fun isLocationServiceEnabled(): Boolean {
@@ -263,6 +272,7 @@ class WiFiActivityMain : AppCompatActivity() {
                 matchResultsTextView.text = "Error retrieving position."
             } finally {
                 loadingProgressBar.visibility = View.GONE // hide loader
+                isScanning = false
             }
         }
 
