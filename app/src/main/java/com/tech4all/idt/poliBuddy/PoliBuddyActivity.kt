@@ -21,10 +21,8 @@ import android.view.LayoutInflater
 
 
 class PoliBuddyActivity : AppCompatActivity () {
-    private lateinit var createNewEventButton: Button;
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: EventAdapter
-    private lateinit var refreshButton: ImageButton
+    private lateinit var planNewEventButton: Button;
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +31,19 @@ class PoliBuddyActivity : AppCompatActivity () {
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         val dynamicContainer = findViewById<FrameLayout>(R.id.dynamicContainer)
 
+        planNewEventButton = findViewById(R.id.planNewEventButton)
+        planNewEventButton.setOnClickListener {
+            val intent = Intent(this, PlanEventActivity::class.java)
+            startActivity(intent)
+        }
 
-        // Aggiungi i due tab: "Helped" e "Helper"
-        tabLayout.addTab(tabLayout.newTab().setText("Helped"))
-        tabLayout.addTab(tabLayout.newTab().setText("Helper"))
+        tabLayout.addTab(tabLayout.newTab().setText("Send an Help Request"))
+        tabLayout.addTab(tabLayout.newTab().setText("Answer to an Help Request"))
 
-        // Mostra il layout iniziale (Helped)
+        // Show the "Send an Help Request" layout initially
         inflateDynamicLayout(R.layout.layout_helped)
 
-        // Listener per cambiare layout quando si seleziona un tab
+        // Handle tab selection
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
@@ -54,38 +56,12 @@ class PoliBuddyActivity : AppCompatActivity () {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-
-
         // Set up the action bar with a back button
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         onBackPressedDispatcher.addCallback(this) {
             finish()
         }
 
-        refreshButton = findViewById(R.id.refreshButton)
-        refreshButton.setOnClickListener {
-            refreshEvents()
-        }
-
-        createNewEventButton = findViewById(R.id.createNewEventButton)
-        createNewEventButton.setOnClickListener {
-            val intent = Intent(this, CreateEventActivity::class.java)
-            startActivity(intent)
-        }
-
-        recyclerView = findViewById(R.id.eventRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        refreshEvents();
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun refreshEvents() {
-        lifecycleScope.launch {
-            val events = SupabaseHelper.getUpcomingEvents()
-            adapter = EventAdapter(events, this@PoliBuddyActivity)
-            recyclerView.adapter = adapter
-        }
     }
 
     private fun inflateDynamicLayout(layoutId: Int) {
