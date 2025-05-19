@@ -329,34 +329,31 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
     }
 
     private fun showFilterDialog() {
-        val checkedItems = availableCategories.map { category ->
-            selectedCategories.contains(category.replace(" ", "_").lowercase())
+        val normalizedAvailableCategories = availableCategories.map { it.replace(" ", "_").lowercase() }
+
+        val checkedItems = normalizedAvailableCategories.map { category ->
+            selectedCategories.contains(category)
         }.toBooleanArray()
-
-
 
         AlertDialog.Builder(this)
             .setTitle("Select categories")
             .setMultiChoiceItems(availableCategories.toTypedArray(), checkedItems) { _, which, isChecked ->
-                val category = availableCategories[which]
+                val normalizedCategory = availableCategories[which].replace(" ", "_").lowercase()
                 if (isChecked) {
-                    selectedCategories.add(category)
+                    selectedCategories.add(normalizedCategory)
                 } else {
-                    selectedCategories.remove(category)
+                    selectedCategories.remove(normalizedCategory)
                 }
             }
             .setPositiveButton("OK") { dialog, _ ->
-                val normalizedCategories = selectedCategories.map { category ->
-                    category.replace(" ", "_").lowercase()
-                }.toSet()
-                detector.updateSelectedCategories(normalizedCategories)
+                detector.updateSelectedCategories(selectedCategories)
                 dialog.dismiss()
             }
-
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
     }
+
 
 }
