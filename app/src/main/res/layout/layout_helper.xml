@@ -1,40 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select a person to help"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:layout_gravity="center_horizontal" />
+    <Button
+        android:id="@+id/createNewEventButton"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="106dp"
+        android:background="@drawable/ic_rounded_button"
+        android:text="Create new event"
+        android:textSize="28sp" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="96dp">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🟠 Mauro  - Building 13 - 100m"
-            android:background="@drawable/ic_rounded_button"
-            android:textColor="@android:color/white"
-            android:padding="12dp"
-            android:textSize="16sp" />
+            android:id="@+id/titleText"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="#006204"
+            android:gravity="center"
+            android:text="Available Events"
+            android:textColor="@color/background"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/refreshButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🟠 Giulio - Building 25 - 500m"
-            android:background="@drawable/ic_rounded_button"
-            android:textColor="@android:color/white"
-            android:padding="12dp"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/refreshButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="#006204"
+            android:contentDescription="Refresh"
+            app:srcCompat="@android:drawable/ic_popup_sync"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/eventRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
 </LinearLayout>

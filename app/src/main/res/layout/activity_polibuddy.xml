@@ -26,15 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp" />
 
-        <Button
-            android:id="@+id/planNewEventButton"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@drawable/ic_rounded_button"
-            android:layout_marginTop="106dp"
-            android:text="Plan new event"
-            android:textSize="20sp" />
-
     </LinearLayout>
 
 </LinearLayout>

@@ -67,10 +67,6 @@
             android:name=".poliBuddy.PoliBuddyActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".poliBuddy.PlanEventActivity"
-            android:exported="false" />
-
     </application>
 
 </manifest>
