@@ -40,14 +40,15 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_wifi_icon" />
+                android:src="@drawable/ic_navigation_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4sp"
+                android:textSize="18sp"
                 android:textColor="#FFFFFF"
-                android:text="Campus Localization"
-                android:textSize="14sp"
+                android:text="Campus Navigation"
                 android:gravity="center" />
         </LinearLayout>
 
@@ -74,7 +75,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
                 android:text="PoliBuddy"
-                android:textSize="14sp"
+                android:layout_marginTop="4sp"
+                android:textSize="18sp"
                 android:gravity="center" />
         </LinearLayout>
 
@@ -101,7 +103,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
                 android:text="Ask me Anything"
-                android:textSize="14sp"
+                android:layout_marginTop="4sp"
+                android:textSize="18sp"
                 android:gravity="center" />
         </LinearLayout>
 
@@ -127,8 +130,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
-                android:text="Start Camera"
-                android:textSize="14sp"
+                android:text="Object Detection"
+                android:layout_marginTop="4sp"
+                android:textSize="18sp"
                 android:gravity="center" />
         </LinearLayout>
 
