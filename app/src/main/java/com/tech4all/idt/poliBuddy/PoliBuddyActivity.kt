@@ -34,13 +34,13 @@ class PoliBuddyActivity : AppCompatActivity() {
         tabLayout.addTab(tabLayout.newTab().setText("Events"))
 
         // Show the "Send an Help Request" layout initially
-        inflateDynamicLayout(R.layout.layout_helped)
+        inflateDynamicLayout(R.layout.layout_helpe_request_tab)
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
-                    0 -> inflateDynamicLayout(R.layout.layout_helped)
-                    1 -> inflateDynamicLayout(R.layout.layout_helper)
+                    0 -> inflateDynamicLayout(R.layout.layout_helpe_request_tab)
+                    1 -> inflateDynamicLayout(R.layout.layout_events_tab)
                 }
             }
 
@@ -62,7 +62,7 @@ class PoliBuddyActivity : AppCompatActivity() {
         dynamicContainer.addView(view)
 
         when (layoutId) {
-            R.layout.layout_helped -> {
+            R.layout.layout_helpe_request_tab -> {
                 val helpButton = view.findViewById<LinearLayout>(R.id.help_button)
                 helpButton.setOnClickListener {
                     // Gestisci richiesta di aiuto
@@ -70,7 +70,7 @@ class PoliBuddyActivity : AppCompatActivity() {
                 }
             }
 
-            R.layout.layout_helper -> {
+            R.layout.layout_events_tab -> {
                 val createNewEventButton = view.findViewById<Button>(R.id.createNewEventButton)
                 val refreshButton = view.findViewById<ImageButton>(R.id.refreshButton)
                 val recyclerView = view.findViewById<RecyclerView>(R.id.eventRecyclerView)
