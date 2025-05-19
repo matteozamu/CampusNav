@@ -50,6 +50,6 @@
         android:layout_marginTop="106dp"
         android:background="@drawable/ic_rounded_button"
         android:text="Create new event"
-        android:textSize="28sp" />
+        android:textSize="18sp" />
 
 </LinearLayout>

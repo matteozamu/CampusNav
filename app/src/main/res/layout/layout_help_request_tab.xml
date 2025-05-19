@@ -16,7 +16,7 @@
 
     <LinearLayout
         android:id="@+id/help_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Send Request"
-        android:textSize="16sp"
+        android:textSize="24sp"
         android:textColor="@android:color/white"
         android:layout_marginTop="8dp" />
     </LinearLayout>
