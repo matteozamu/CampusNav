@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
+        app:layout_constraintGuide_begin="0dp" />
 
     <ImageView
         android:id="@+id/locationIcon"
@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="@id/topGuideline"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="15dp" />
 
     <TextView
         android:id="@+id/matchResultsTextView"
