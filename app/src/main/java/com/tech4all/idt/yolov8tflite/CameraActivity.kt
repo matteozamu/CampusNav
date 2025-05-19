@@ -52,9 +52,9 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
     private lateinit var viewFinder: PreviewView
     private lateinit var backButton: ImageButton
     private lateinit var filterButton: ImageButton
-    private val availableCategories = listOf("Stair", "door", "exit sign", "men restroom", "women restroom")
+    private val availableCategories = listOf("Stair", "Door", "Exit Sign", "Men Restroom", "Women Restroom")
     private val selectedCategories = mutableSetOf<String>().apply {
-        addAll(availableCategories.map { it.replace(" ", "_") })
+        addAll(availableCategories.map { it.replace(" ", "_").lowercase() })
     }
 
 
@@ -329,7 +329,11 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
     }
 
     private fun showFilterDialog() {
-        val checkedItems = availableCategories.map { selectedCategories.contains(it) }.toBooleanArray()
+        val checkedItems = availableCategories.map { category ->
+            selectedCategories.contains(category.replace(" ", "_").lowercase())
+        }.toBooleanArray()
+
+
 
         AlertDialog.Builder(this)
             .setTitle("Select categories")
@@ -343,7 +347,7 @@ class CameraActivity : AppCompatActivity(), Detector.DetectorListener {
             }
             .setPositiveButton("OK") { dialog, _ ->
                 val normalizedCategories = selectedCategories.map { category ->
-                    category.replace(" ", "_")
+                    category.replace(" ", "_").lowercase()
                 }.toSet()
                 detector.updateSelectedCategories(normalizedCategories)
                 dialog.dismiss()

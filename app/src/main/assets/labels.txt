@@ -1,4 +1,4 @@
-Stair
+stair
 door
 exit_sign
 men_restroom

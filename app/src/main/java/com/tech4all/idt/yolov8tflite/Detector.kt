@@ -162,7 +162,8 @@ class Detector(
                 val clsName = labels[maxIdx]
 
                 // ❗ Filter out classes not selected by the user
-                if (!selectedCategories.contains(clsName)) continue
+                if (selectedCategories.isNotEmpty() && !selectedCategories.contains(clsName.replace(" ", "_").lowercase())) continue
+
 
                 // Extract center and size of the bounding box
                 val cx = array[c]
@@ -252,8 +253,11 @@ class Detector(
     }
 
     fun updateSelectedCategories(categories: Set<String>) {
-        selectedCategories = categories
+        selectedCategories = categories.map {
+            it.replace(" ", "_").lowercase()
+        }.toSet()
     }
+
 
 
 }
