@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:textColor="@color/black"
         android:hint="Event Creator Name"
         android:inputType="textPersonName" />
 
@@ -30,6 +31,7 @@
         android:id="@+id/eventDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:layout_marginTop="8dp"
         android:hint="Event Date (e.g., YYYY-MM-DD)"
         android:inputType="date" />
@@ -38,6 +40,7 @@
         android:id="@+id/eventTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:layout_marginTop="8dp"
         android:hint="Event Time (e.g., HH:MM)"
         android:inputType="time" />
@@ -46,6 +49,7 @@
         android:id="@+id/eventType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:layout_marginTop="8dp"
         android:hint="Event Type"
         android:inputType="text" />
