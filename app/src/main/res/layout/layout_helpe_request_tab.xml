@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Press below before to send an help request"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:gravity="center" />
 
