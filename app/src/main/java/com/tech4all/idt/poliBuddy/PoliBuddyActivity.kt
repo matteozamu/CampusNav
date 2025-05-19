@@ -34,12 +34,12 @@ class PoliBuddyActivity : AppCompatActivity() {
         tabLayout.addTab(tabLayout.newTab().setText("Events"))
 
         // Show the "Send an Help Request" layout initially
-        inflateDynamicLayout(R.layout.layout_helpe_request_tab)
+        inflateDynamicLayout(R.layout.layout_help_request_tab)
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
-                    0 -> inflateDynamicLayout(R.layout.layout_helpe_request_tab)
+                    0 -> inflateDynamicLayout(R.layout.layout_help_request_tab)
                     1 -> inflateDynamicLayout(R.layout.layout_events_tab)
                 }
             }
@@ -62,7 +62,7 @@ class PoliBuddyActivity : AppCompatActivity() {
         dynamicContainer.addView(view)
 
         when (layoutId) {
-            R.layout.layout_helpe_request_tab -> {
+            R.layout.layout_help_request_tab -> {
                 val helpButton = view.findViewById<LinearLayout>(R.id.help_button)
                 helpButton.setOnClickListener {
                     // Gestisci richiesta di aiuto
