@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginTop="120dp"
-        android:background="@drawable/rounded_chip"
+        android:background="@drawable/ic_rounded_button"
         android:text="Event details"
         android:textAlignment="center"
         android:textColor="@color/white"
@@ -53,6 +53,7 @@
     <Button
         android:id="@+id/createEventButton"
         android:layout_width="wrap_content"
+        android:background="@drawable/ic_rounded_button"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
