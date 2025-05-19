@@ -8,7 +8,6 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
@@ -28,10 +27,13 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 import android.location.LocationManager
+import android.os.Build
 import android.os.SystemClock
 import android.provider.Settings
 import android.view.View
 import android.widget.ProgressBar
+import androidx.compose.ui.semantics.text
+import androidx.glance.visibility
 import com.tech4all.idt.R
 import com.tech4all.idt.SupabaseHelper
 
@@ -44,7 +46,6 @@ class NewPositionActivity : AppCompatActivity() {
     // Define UI elements
     private lateinit var wifiManager: WifiManager
     private lateinit var textView: TextView
-    private lateinit var textToSpeech: TextToSpeech
     private lateinit var speechToggleButton: ToggleButton
     private lateinit var positionIdEditText: EditText
     private lateinit var scanButton: Button
@@ -89,13 +90,6 @@ class NewPositionActivity : AppCompatActivity() {
         wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Initialize TextToSpeech
-        textToSpeech = TextToSpeech(this) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                textToSpeech.language = Locale.getDefault()
-            }
-        }
-
         // Set up button listeners
         scanButton.setOnClickListener {
             textView.text = "Indoor positioning system"  // Clear previous results
@@ -114,16 +108,6 @@ class NewPositionActivity : AppCompatActivity() {
                 }
             } else {
                 Toast.makeText(this, "Please enter a position ID", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // Toggle speech feedback based on button state
-        speechToggleButton.setOnCheckedChangeListener { _, isChecked ->
-            isSpeechEnabled = isChecked
-            if (isChecked) {
-                textToSpeech.speak("Speech enabled", TextToSpeech.QUEUE_FLUSH, null, null)
-            } else {
-                textToSpeech.stop()
             }
         }
 
@@ -190,7 +174,7 @@ class NewPositionActivity : AppCompatActivity() {
             return
         }
 
-        if (now - lastScanTime < 30000) {
+        if (now - lastScanTime < 10000) {
             Toast.makeText(this, "Please wait before scanning again", Toast.LENGTH_SHORT).show()
             loadingProgressBar.visibility = View.GONE
             return
@@ -203,21 +187,36 @@ class NewPositionActivity : AppCompatActivity() {
 
         if (!success) {
             textView.text = "Scan failed"
-            Log.e("WiFiScan", "startScan() failed")
+            Log.e("WiFiScan", "startScan() returned false. This can be due to various reasons including throttling, permissions, or device state.")
+
+            // Log additional Wi-Fi state information for debugging
+            Log.e("WiFiScan", "Wi-Fi enabled: ${wifiManager.isWifiEnabled}")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Log.e("WiFiScan", "Location permission granted: ${checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED}")
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                var locationMode = -1 // Default if error occurs
+                try {
+                    locationMode = Settings.Secure.getInt(contentResolver, Settings.Secure.LOCATION_MODE)
+                } catch (e: Settings.SettingNotFoundException) {
+                    // Logged above
+                }
+                Log.e("WiFiScan", "Location Mode (0=OFF, 3=HIGH_ACCURACY): $locationMode")
+            }
+
             loadingProgressBar.visibility = View.GONE
         } else {
+            Log.i("WiFiScan", "startScan() successful. Waiting for results in BroadcastReceiver.")
             // Wait for results in the BroadcastReceiver
             // textView will be updated there after scan completes
         }
     }
-
 
     private fun isLocationServiceEnabled(): Boolean {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
-
 
     /**
      * wifiScanReceiver handles broadcasted scan results once the Wi-Fi scan is complete.
@@ -227,6 +226,7 @@ class NewPositionActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
             if (success) {
+                loadingProgressBar.visibility = View.GONE
                 displayResults()  // Display scan results
             }
         }
@@ -260,9 +260,8 @@ class NewPositionActivity : AppCompatActivity() {
             signalStrengths.add(result.level)
         }
 
-        textView.text = "Scan completed"
+        textView.text = sb.toString()
     }
-
 
     /**
      * saveScanResults saves the top 5 Wi-Fi scan results to a database.
@@ -307,8 +306,6 @@ class NewPositionActivity : AppCompatActivity() {
                 Log.w("WiFiScan", "Receiver already unregistered")
             }
         }
-        textToSpeech.stop()
-        textToSpeech.shutdown()
     }
 
 

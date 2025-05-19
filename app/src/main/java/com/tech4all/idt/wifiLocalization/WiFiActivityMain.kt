@@ -130,7 +130,6 @@ class WiFiActivityMain : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            scanWifi()  // Permission granted, proceed with scanning
         } else {
             ActivityCompat.requestPermissions(
                 this,
@@ -151,7 +150,7 @@ class WiFiActivityMain : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                scanWifi()  // Permission granted, proceed with scanning
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(this, "Location permission is required for Wi-Fi scanning", Toast.LENGTH_LONG).show()
             }
@@ -194,14 +193,11 @@ class WiFiActivityMain : AppCompatActivity() {
         }
     }
 
-
-
     private fun isLocationServiceEnabled(): Boolean {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
-
 
     /**
      * wifiScanReceiver handles broadcasted scan results once the Wi-Fi scan is complete.
@@ -211,7 +207,7 @@ class WiFiActivityMain : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
             if (success) {
-                displayResults()  // Display scan results
+                 displayResults()
             }
         }
     }
@@ -225,7 +221,6 @@ class WiFiActivityMain : AppCompatActivity() {
             != PackageManager.PERMISSION_GRANTED
         ) return
 
-        // Sort results by signal strength (level)
         val results = wifiManager.scanResults
         val sortedResults = results.sortedByDescending { it.level }
 
@@ -233,26 +228,22 @@ class WiFiActivityMain : AppCompatActivity() {
         val bssids = mutableListOf<String>()
         val signalStrengths = mutableListOf<Int>()
 
-        // Display top 5 strongest networks
         for (result in sortedResults.take(5)) {
             sb.append(result.SSID)
                 .append(" - BSSID: ").append(result.BSSID)
                 .append(" - Signal Strength: ").append(result.level).append(" dBm\n")
 
-            // Add BSSIDs and signal strengths to the respective lists
             bssids.add(result.BSSID)
             signalStrengths.add(result.level)
         }
 
-        // Call queryBestMatchingPosition with the extracted BSSIDs and signal strengths
         CoroutineScope(Dispatchers.Main).launch {
             loadingProgressBar.visibility = View.VISIBLE // show loader
             try {
                 Log.d("queryBestMatchingPosition called", bssids.toString())
                 val matches = SupabaseHelper.queryBestMatchingPosition(bssids, signalStrengths)
                 val resultText = if (matches.isNotEmpty()) {
-                    "You are in room " + matches.joinToString(separator = "\n") { (id, name) ->
-                        "$name | Floor: $id"
+                    "You are in " + matches.joinToString(separator = "\n") { (id, name) -> name
                     }
                 } else {
                     "No position founded."
@@ -272,7 +263,6 @@ class WiFiActivityMain : AppCompatActivity() {
 
     }
 
-
     /**
      * saveScanResults saves the top 5 Wi-Fi scan results to a database.
      * @param positionId The position identifier for the scan.
@@ -288,7 +278,6 @@ class WiFiActivityMain : AppCompatActivity() {
             val sortedResults = results.sortedByDescending { it.level }
             Log.d("SaveScanResults", "Wi-Fi scan results size: ${results.size}")
 
-            // Log and save top 5 results
             for (result in sortedResults.take(5)) {
                 Log.d("SaveScanResults", "BSSID: ${result.BSSID}, Signal Strength: ${result.level}")
                 SupabaseHelper.insertWifiScan(
@@ -296,7 +285,7 @@ class WiFiActivityMain : AppCompatActivity() {
                     result.SSID,
                     result.BSSID,
                     result.level
-                )  // Insert data to database
+                )
             }
 
             Toast.makeText(applicationContext, "Data saved!", Toast.LENGTH_SHORT).show()  // Show success message
