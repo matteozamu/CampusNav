@@ -40,7 +40,7 @@ import android.view.View
 class GemmaActivity : AppCompatActivity() {
 
     // Base URL of the FastAPI server
-    private val serverBaseUrl = "http://192.168.1.152:8000" // 👈 Your personal server URL
+    private val serverBaseUrl = "http://172.20.10.4:8000" // 👈 Your personal server URL
 
     // UI components
     private lateinit var recordButton: Button
