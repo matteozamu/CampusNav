@@ -152,6 +152,7 @@ The app’s user interface is built using **Android XML layout files** located i
 <p float="left">
   <img src="docs/LayoutsScreenshots/Main.jpg" alt="Main layout" width="180" style="margin-right:10px;" />
   <img src="docs/LayoutsScreenshots/Wifi.jpg" alt="Wifi localization layout" width="180" style="margin-right:10px;" />
+  <img src="docs/LayoutsScreenshots/ObjectCategories.png" alt="Object Selection layout" width="180" style="margin-right:10px;" />
   <img src="docs/LayoutsScreenshots/Yolo.jpg" alt="Object Recognition layout" width="180" style="margin-right:10px;" />
   <img src="docs/LayoutsScreenshots/PoliBuddy.jpg" alt="PoliBUddy layout" width="180" />
 </p>
