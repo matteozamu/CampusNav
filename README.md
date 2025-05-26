@@ -1,4 +1,4 @@
-# 🎓 Campus Nav — Indoor Navigation for the Visually Impaired @ Politecnico di Milano
+# 🎓 Campus Nav — Indoor Navigation Assistant, tailored for Visually Impaired People @ Politecnico di Milano
 
 [![Android SDK](https://img.shields.io/badge/SDK-Android%2033+-brightgreen.svg)](https://developer.android.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
