@@ -171,9 +171,9 @@ We welcome suggestions, bug reports, and contributions, especially in areas like
 ## 🧠 Academic Context
 This project was developed for:
 
-Course: IDT - Inclusive Digital Technologies
-Academic Year: 2024–2025
-Institution: Politecnico di Milano
+- Course: IDT - Inclusive Digital Technologies
+- Academic Year: 2024–2025
+- Institution: Politecnico di Milano
 
 ---
 
