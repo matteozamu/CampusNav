@@ -3,6 +3,8 @@
 [![Android SDK](https://img.shields.io/badge/SDK-Android%2033+-brightgreen.svg)](https://developer.android.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status: Academic Project](https://img.shields.io/badge/status-academic-blue.svg)](#academic-context)
+[![Language](https://img.shields.io/badge/language-Kotlin-0095D5.svg)](https://kotlinlang.org)
+[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-brightgreen.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
 **Campus Nav** is an innovative Android application developed as part of the course **IDT - Inclusive Digital Technologies (A.Y. 2024–2025)** at **Politecnico di Milano**. Designed with **accessibility at its core**, Campus Nav empowers **👨‍🦯 blind and visually impaired users** to navigate the university's indoor environments independently, confidently, and safely.
 
@@ -35,7 +37,9 @@ Every feature in this app is designed to **enhance independence, confidence, and
 
 - 👐 Hands-free operation where possible  
 - 🗣️ Screen reader compatibility  
-- 🧭 Minimal UI complexity for ease of navigation  
+- 🧭 Minimal UI complexity for ease of use  
+- 🎙️ Audio feedback and voice guidance  
+- 🌗 High contrast visuals and accessible gestures
 
 ---
 
