@@ -13,7 +13,7 @@
 ## 🎥 Demonstration
 Watch the video below to see the tool in action:
 
-[![Watch the video](https://img.youtube.com/vi/_9gOSSVsfUQ/hqdefault.jpg?v=2)](https://www.youtube.com/watch?v=_9gOSSVsfUQ)
+[![Watch the video](https://img.youtube.com/vi/amo7py3NDTQ/hqdefault.jpg)](https://www.youtube.com/watch?v=amo7py3NDTQ)
 
 ---
 
