@@ -104,7 +104,8 @@ val SERVER_URL = "http://192.168.X.X:8000"
 
 Replace 192.168.X.X with your computer’s local IP address.
 
-📌 Important: This backend is temporary and meant for local testing purposes only. Future versions may integrate a cloud-hosted endpoint.
+### 📌 Important: This backend is temporary and meant for local testing purposes only. Future versions may integrate a cloud-hosted endpoint.
+
 ---
 
 ## 🛠️ Technology Stack
