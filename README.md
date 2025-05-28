@@ -82,7 +82,7 @@ docs/gemma3Server.py
 You can run it with:
 
 ```bash
-uvicorn docs.gemma3Server:app --host 0.0.0.0 --port 8000
+uvicorn gemma3Server:app --host 0.0.0.0 --port 8000
 ```
 
 ### 🌐 IP Configuration
