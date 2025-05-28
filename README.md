@@ -10,6 +10,13 @@
 
 ---
 
+## 🎥 Demonstration
+Watch the video below to see the tool in action:
+
+[![Watch the video](https://img.youtube.com/vi/_9gOSSVsfUQ/hqdefault.jpg)](https://www.youtube.com/watch?v=_9gOSSVsfUQ)
+
+---
+
 ## 📚 Table of Contents
 
 - [📦 Installation Instructions](#-installation-instructions)
