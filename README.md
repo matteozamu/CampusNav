@@ -11,7 +11,7 @@
 ---
 
 ## 🎥 Demonstration
-Watch the video below to see the tool in action:
+Watch the video below to see the application in action:
 
 [![Watch the video](https://img.youtube.com/vi/amo7py3NDTQ/hqdefault.jpg)](https://www.youtube.com/watch?v=amo7py3NDTQ)
 
