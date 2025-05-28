@@ -113,6 +113,7 @@ IDT-app/
 │   └── build.gradle                             # App-level Gradle config
 ├── build.gradle                                 # Project-level Gradle config
 ├── README.md                                    # Project overview and documentation
+├── docs                                         # Documents produced during the development
 └── LICENSE                                      # Open-source license (MIT)
 ```
 ---
