@@ -10,8 +10,22 @@
 
 ---
 
+## 🎥 Demonstration
+Watch the video below to see the application in action:
+
+[![Watch the video](https://img.youtube.com/vi/amo7py3NDTQ/hqdefault.jpg)](https://www.youtube.com/watch?v=amo7py3NDTQ)
+
+---
+
 ## 📚 Table of Contents
 
+- [📦 Installation Instructions](#-installation-instructions)
+  - [🛠 Android App](#-android-app)
+  - [🧠 Local LLM Backend Setup (Gemma3)](#-local-llm-backend-setup-gemma3)
+    - [🧾 Requirements](#-requirements)
+    - [📂 Script Location](#-script-location)
+    - [🌐 IP Configuration](#-ip-configuration)
+- [🛠️ Technology Stack](#-technology-stack)
 - [👨‍🦯 A Mission-Driven App](#-a-mission-driven-app)
 - [🚀 Key Features](#-key-features)
   - [📍 Wi-Fi Based Indoor Navigation](#-wi-fi-based-indoor-navigation)
@@ -20,12 +34,100 @@
   - [🤝 PoliBuddy Assistance System](#-polibuddy-assistance-system)
 - [🏛️ Built for Politecnico di Milano](#-built-for-politecnico-di-milano)
 - [📁 Project Structure](#-project-structure)
-- [📦 Installation Instructions](#-installation-instructions)
-- [🛠️ Technology Stack](#-technology-stack)
+- [🎨 Layouts and UI Design](#-layouts-and-ui-design)
 - [🤝 Contributing](#-contributing)
 - [🧠 Academic Context](#-academic-context)
 - [📜 License](#-license)
 - [💡 Our Vision](#-our-vision)
+
+---
+
+# 📦 Installation Instructions
+
+Clone the repository
+```bash
+git clone https://github.com/yourusername/campus-nav.git
+```
+
+## 🛠 Android App
+1. Open the project in Android Studio
+2. Connect a physical Android device
+3. Build and Run the app
+4. Make sure to grant the following permissions:
+
+- 📍 Location
+
+- 📷 Camera
+
+- 🌐 Network access
+
+## 🧠 Local LLM Backend Setup (Gemma3)
+Campus Nav uses a local large language model (LLM) to analyze video content for accessibility support. This backend script is used to interact with the LLM (e.g., Ollama + Gemma3).
+
+### 🧾 Requirements
+- Python 3.8+
+- Ollama installed (https://ollama.com)
+- Ollama Gemma model downloaded locally:
+
+```bash
+ollama pull gemma3:4b
+```
+
+### FastAPI & dependencies:
+
+```bash
+pip install fastapi uvicorn pydantic pillow opencv-python ollama
+```
+
+### 📂 Script Location
+The backend Python script is located at:
+
+```bash
+docs/gemma3Server.py
+```
+
+You can run it with:
+
+```bash
+uvicorn gemma3Server:app --host 0.0.0.0 --port 8000
+```
+
+### 🌐 IP Configuration
+To enable the Android app to communicate with the local server:
+
+In your Android device (or emulator), make sure the backend is accessible (same WiFi network).
+
+Modify the server IP address inside:
+
+```kotlin
+GemmaActivity.kt
+```
+
+Look for a variable or constant like:
+
+```kotlin
+val SERVER_URL = "http://192.168.X.X:8000"
+```
+
+Replace 192.168.X.X with your computer’s local IP address.
+
+### 📌 Important: This backend is temporary and meant for local testing purposes only. Future versions may integrate a cloud-hosted endpoint.
+
+---
+
+## 🛠️ Technology Stack
+
+- Kotlin, Android SDK
+
+- YOLOv8 + TensorFlow Lite
+
+- Google FusedLocationProviderClient
+
+- Custom Wi-Fi signal processing
+
+- GEMMA3 video intelligence API
+
+- Material Design Accessibility Guidelines
 
 ---
 
@@ -113,36 +215,9 @@ IDT-app/
 │   └── build.gradle                             # App-level Gradle config
 ├── build.gradle                                 # Project-level Gradle config
 ├── README.md                                    # Project overview and documentation
+├── docs                                         # Documents produced during the development
 └── LICENSE                                      # Open-source license (MIT)
 ```
----
-
-## 📦 Installation Instructions
-
-```bash
-git clone https://github.com/yourusername/campus-nav.git
-```
-Open the project in Android Studio
-Build and run on a physical Android device
-
-✅ Ensure that camera, location, and network permissions are enabled for full functionality.
-
----
-
-## 🛠️ Technology Stack
-
-- Kotlin, Android SDK
-
-- YOLOv8 + TensorFlow Lite
-
-- Google FusedLocationProviderClient
-
-- Custom Wi-Fi signal processing
-
-- GEMMA3 video intelligence API
-
-- Material Design Accessibility Guidelines
-
 ---
 
 ## 🎨 Layouts and UI Design
